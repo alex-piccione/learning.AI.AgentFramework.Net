@@ -4,6 +4,7 @@ type AIService =
     | OpenAI
     | LocalOllama
     | AliBaba
+    | AliBabaPlan
     | GitHub
     | Mistral
 

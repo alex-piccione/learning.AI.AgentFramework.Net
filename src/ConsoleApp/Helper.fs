@@ -6,20 +6,35 @@ open Microsoft.Extensions.AI
 
 let renderUsage (usage:UsageDetails) = 
     let output = $"""
-| Token Type | Count | 
-|-----|-----| 
-| Input Tokens | {if usage.InputTokenCount.HasValue then string usage.InputTokenCount.Value else "N/A"} | 
-| Output Tokens | {if usage.OutputTokenCount.HasValue then string usage.OutputTokenCount.Value else "N/A"} | 
-| Reasoning Tokens | {if usage.ReasoningTokenCount.HasValue then string usage.ReasoningTokenCount.Value else "N/A"} | 
-| **Total Tokens** | **{if usage.TotalTokenCount.HasValue then string usage.TotalTokenCount.Value else "N/A"}** |
+| Token Type | Count |
+|-----|-----|
+| Input Tokens | {if usage.InputTokenCount.HasValue then string usage.InputTokenCount.Value else "N/A"} |
+| Output Tokens | {if usage.OutputTokenCount.HasValue then string usage.OutputTokenCount.Value else "N/A"} |
+| Reasoning Tokens | {if usage.ReasoningTokenCount.HasValue then string usage.ReasoningTokenCount.Value else "N/A"} |
+| Total Tokens | {if usage.TotalTokenCount.HasValue then string usage.TotalTokenCount.Value else "N/A"} |
 
-*Additional Token Counts:*
-    {match usage.AdditionalCounts with
-     | null -> "None"
-     | counts -> String.concat "\n" [for kvp in counts -> $"- {kvp.Key}: {kvp.Value}"]}
-    """
+Additional Token Counts:
+{match usage.AdditionalCounts with
+ | null -> "None"
+ | counts -> String.concat "\n" [for kvp in counts -> $"- {kvp.Key}: {kvp.Value}"]}
+"""
+    try 
+        // TODO: avoid exception to be printed on Console
 
-    ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(output) |> Async.AwaitTask |> Async.RunSynchronously
+        // this one is always printed on console
+        //task {
+        //    do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(output)
+        //} |> Async.AwaitTask |> Async.RunSynchronously
+
+        // this one is always printed on console
+        //async {
+        //    do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(output) |> Async.AwaitTask
+        //} |> Async.RunSynchronously
+
+        System.Console.WriteLine output
+    with ex ->
+        System.Console.WriteLine $"ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync failed. {ex}"
+        System.Console.WriteLine output
 
 
 [<Extension>]
