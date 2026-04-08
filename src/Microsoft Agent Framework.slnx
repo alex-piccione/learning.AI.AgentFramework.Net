@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="ConsoleApp/ConsoleApp.fsproj" />
+  <Project Path="Library/Library.fsproj" Id="a7f45ae3-b60c-4d7e-9d39-aea7fe780829" />
+  <Project Path="UnitTests/UnitTests.fsproj" Id="7f15e85c-fbdc-4fb0-bde3-7726290e5acf" />
+</Solution>

@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Constants.fs" />
+    <Compile Include="Models.fs" />
+    <Compile Include="Tools\Models\KrakenModels.fs" />
+    <Compile Include="Tools\ToolsBase.fs" />
+    <Compile Include="Tools\WiseTools.fs" />
+    <Compile Include="Tools\KrakenTools.fs" />
+    <Compile Include="Tools\CoingeckoModels.fs" />
+    <Compile Include="Tools\CoigeckoTools.fs" />
+    <Compile Include="Tools\RandomTools.fs" />
+    <Compile Include="Tools\OpenMeteo.models.fs" />
+    <Compile Include="Tools\OpenMeteoTools.fs" />
+    <Compile Include="Agents\Settings\Cryptocurrency.fs" />
+    <Compile Include="Agents\WeatherAgent.fs" />
+    <Compile Include="Agents\CryptocurrencyAgent.fs" />
+    <Compile Include="OpenAIClientBuilder.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Alex75.Cryptocurrencies" />
+    <PackageReference Include="Alex75.KrakenApiClient" />
+    <PackageReference Include="FSharp.Core" />
+    <PackageReference Include="FsHttp" />
+    <PackageReference Include="Microsoft.Agents.AI" />
+    <PackageReference Include="Microsoft.Agents.AI.Abstractions" />
+    <PackageReference Include="Microsoft.Agents.AI.OpenAI" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+  </ItemGroup>
+
+</Project>
