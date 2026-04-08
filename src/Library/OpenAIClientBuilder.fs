@@ -6,6 +6,7 @@ open Microsoft.Extensions.AI
 
 type LLMProvider =
     | AliBaba
+    | AliBabaPlan
     | GitHub
     | Mistral
 
@@ -28,9 +29,10 @@ type OpenAIClientBuilder () =
 
         let url = 
             match provider with
-            | LLMProvider.AliBaba -> Constants.LLMProviders.ALIBABA_AI_URL
-            | LLMProvider.GitHub -> Constants.LLMProviders.GITHUB_AI_URL
-            | LLMProvider.Mistral -> Constants.LLMProviders.MISTRAL_AI_URL
+            | LLMProvider.AliBaba -> Constants.LLMProviders.ALIBABA_URL
+            | LLMProvider.AliBabaPlan -> Constants.LLMProviders.ALIBABA_PLAN_URL
+            | LLMProvider.GitHub -> Constants.LLMProviders.GITHUB_URL
+            | LLMProvider.Mistral -> Constants.LLMProviders.MISTRAL_URL
 
         let credentials = ClientModel.ApiKeyCredential apiKey
         let options = OpenAI.OpenAIClientOptions()

@@ -17,10 +17,7 @@ type Ticker with
             Ask = ticker.Ask
         }
 
-type OrderSide =
-    | [<Description("The order is for BUY the main token, paying within the quote token")>] Buy
-    | [<Description("The order is for SELL the main token, paying within the quote token")>] Sell
-
+[<Description("Order in status \"open\" in the Kraken market")>]
 type OpenOrder = {
     [<Description("When the order was created")>]
     CreatedOn: DateTime
@@ -28,8 +25,8 @@ type OpenOrder = {
     MainCurrency: string
     [<Description("The quote currency")>]
     QuoteCurrency: string
-    [<Description("The quote currency")>]
-    Side: OrderSide
+    [<Description("The side of the order (Buy or Sell)")>]
+    Side: string
 }
 
 type OpenOrder with
@@ -40,6 +37,6 @@ type OpenOrder with
             QuoteCurrency = order.Pair.Quote.UpperCase
             Side =
                 match order.Side with
-                | Alex75.Cryptocurrencies.OrderSide.Buy -> Buy
-                | Alex75.Cryptocurrencies.OrderSide.Sell -> Sell
+                | Alex75.Cryptocurrencies.OrderSide.Buy -> "Buy"
+                | Alex75.Cryptocurrencies.OrderSide.Sell -> "Sell"
         }
