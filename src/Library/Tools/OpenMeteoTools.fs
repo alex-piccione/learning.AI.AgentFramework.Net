@@ -1,4 +1,4 @@
-module Tools.OpenMeteoTools
+namespace Tools.OpenMeteo
 
 open System.Threading.Tasks
 open System.ComponentModel
@@ -6,7 +6,7 @@ open System.Net.Http
 open Microsoft.Extensions.Logging
 
 open Tools.OpenMeteo.Models
-open Tools.ToolsBase
+open Tools
 
 [<Description("Coordinates of a city")>]
 type CityLocation = {

@@ -1,12 +1,12 @@
-module Tools.Kraken
+namespace Tools.Kraken
 
 open Microsoft.Extensions.Logging
 open System.ComponentModel
 open System.Threading.Tasks
 open Alex75.KrakenApiClient
 open Alex75.Cryptocurrencies
-open ToolsBase
-open KrakenModels
+open Tools
+open Tools.Kraken.Models
 
 
 type KrakenTools (logger:ILogger, krakenPublicKey, kakenSecretKey) =

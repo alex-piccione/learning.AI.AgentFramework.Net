@@ -1,8 +1,7 @@
-﻿module KrakenModels
+﻿module Tools.Kraken.Models
 
 open System
 open System.ComponentModel
-open Alex75.Cryptocurrencies
 
 type Ticker = {
     [<Description("Highest price offered for buy in the market")>]
@@ -39,9 +38,8 @@ type OpenOrder with
             CreatedOn = order.OpenTime
             MainCurrency = order.Pair.Main.UpperCase
             QuoteCurrency = order.Pair.Quote.UpperCase
-            Side = 
-                match order.Side with 
+            Side =
+                match order.Side with
                 | Alex75.Cryptocurrencies.OrderSide.Buy -> Buy
                 | Alex75.Cryptocurrencies.OrderSide.Sell -> Sell
-
         }

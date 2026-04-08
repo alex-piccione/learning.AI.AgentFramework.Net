@@ -5,10 +5,10 @@ open Microsoft.Extensions.Logging
 open Microsoft.Agents.AI
 open Microsoft.Extensions.AI
 
-open Tools.Kraken
-open Tools.CoingeckoTools
-open Tools.ToolsBase
+open Tools.Coingecko
+open Tools.helper
 open Tools.Wise
+open Tools.Kraken
 
 type CryptocurrencyAgent (
     logger:ILogger,

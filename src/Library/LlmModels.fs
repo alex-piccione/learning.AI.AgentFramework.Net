@@ -1,4 +1,4 @@
-module Models
+module LlmModels
 
     module public OpenAI =
         let GPT_5_2 = "gpt-5.2"

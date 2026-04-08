@@ -5,15 +5,15 @@
 
   <ItemGroup>
     <Compile Include="Constants.fs" />
-    <Compile Include="Models.fs" />
-    <Compile Include="Tools\Models\KrakenModels.fs" />
+    <Compile Include="LlmModels.fs" />
+    <Compile Include="Tools\Models\OpenMeteo.models.fs" />
+    <Compile Include="Tools\Models\Coingecko.models.fs" />
+    <Compile Include="Tools\Models\Kraken.models.fs" />
     <Compile Include="Tools\ToolsBase.fs" />
     <Compile Include="Tools\WiseTools.fs" />
     <Compile Include="Tools\KrakenTools.fs" />
-    <Compile Include="Tools\CoingeckoModels.fs" />
     <Compile Include="Tools\CoigeckoTools.fs" />
     <Compile Include="Tools\RandomTools.fs" />
-    <Compile Include="Tools\OpenMeteo.models.fs" />
     <Compile Include="Tools\OpenMeteoTools.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />

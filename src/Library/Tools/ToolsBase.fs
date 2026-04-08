@@ -1,4 +1,4 @@
-module Tools.ToolsBase
+namespace Tools
 
 open System.Reflection
 open System.ComponentModel
@@ -32,7 +32,10 @@ type ToolsBase (logger:ILogger) =
     default this.LogError method ex =
         logger.LogError($"{this.GetType().Name} | Failed to call {method} | {ex}")
 
-/// Convert a sequence os AITool sequence to a List that is required for the Agent contructor
-let asList (tools:AITool seq seq) =
-    let finalSeq = tools |> Seq.fold (fun state tools -> Seq.append state tools) Seq.empty<AITool>
-    System.Collections.Generic.List<AITool>(finalSeq)
+
+module helper =
+
+    /// Convert a sequence of AITool sequence to a List that is required for the Agent contructor
+    let asList (tools:AITool seq seq) =
+        let finalSeq = tools |> Seq.fold (fun state tools -> Seq.append state tools) Seq.empty<AITool>
+        System.Collections.Generic.List<AITool>(finalSeq)

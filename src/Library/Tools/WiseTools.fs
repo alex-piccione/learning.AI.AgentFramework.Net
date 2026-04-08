@@ -1,11 +1,11 @@
-module Tools.Wise
+namespace Tools.Wise
 
 open Microsoft.Extensions.Logging
 open System.Threading.Tasks
 open System.ComponentModel
 open Alex75.Cryptocurrencies
 open Alex75.Cryptocurrencies.Services.Wise
-open ToolsBase
+open Tools
 
 type WiseTools (logger:ILogger, apiKey) =
     inherit ToolsBase(logger)

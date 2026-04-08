@@ -26,8 +26,8 @@ let config =
         //.AddAzureKeyVault(Uri("https://your-vault.vault.azure.net/"), DefaultAzureCredential())
         .Build()
 
-let weather_model = Models.OpenAI.GPT_5_mini
-let cryptocurrencies_model = Models.OpenAI.GPT_5_2
+let weather_model = LlmModels.OpenAI.GPT_5_mini
+let cryptocurrencies_model = LlmModels.OpenAI.GPT_5_2
 
 let openAIKey = config.Get "OpenAI api key"
 let alibabaApiKey = config.Get "AliBaba api key"
@@ -49,9 +49,9 @@ let chatClient, model =
     match Settings.service with
     | Settings.AIService.OpenAI -> OpenAIClientBuilder.BuildOpenAIChatClient (openAIKey, cryptocurrencies_model)
     | Settings.AIService.LocalOllama -> OpenAIClientBuilder.BuildLocalOllamaChatClient Settings.OllamaModel
-    | Settings.AIService.AliBaba -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, Models.Alibaba.Zhipu)
-    | Settings.AIService.GitHub -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.GitHub, githubToken, Models.GitHub.Phi_4_mini_instruct)
-    | Settings.AIService.Mistral -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Mistral, mistralApiKey, Models.Mistral.MINISTRAL_14b_2512)
+    | Settings.AIService.AliBaba -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, LlmModels.Alibaba.Zhipu)
+    | Settings.AIService.GitHub -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.GitHub, githubToken, LlmModels.GitHub.Phi_4_mini_instruct)
+    | Settings.AIService.Mistral -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Mistral, mistralApiKey, LlmModels.Mistral.MINISTRAL_14b_2512)
 
 let cryptocurrencyAgent = CryptocurrencyAgent(
         logger,
@@ -66,19 +66,25 @@ AnsiConsole.MarkupLine $"🤖 Cryptocurrencies Agent [blue]{cryptocurrencyAgent.
 
 //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
 //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
-let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
+//let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
+let question = "There are open orders on Kraken?"
 AnsiConsole.MarkupLine($"[cyan]{question}[/]")
 
 task {
-    let! response = cryptocurrencyAgent.Ask(question, ct)
+    try
+        let! response = cryptocurrencyAgent.Ask(question, ct)
 
-    match response.Usage with
-    | null -> ()
-    | usage -> renderUsage usage
+        match response.Usage with
+        | null -> ()
+        | usage -> renderUsage usage
 
-    //logger.LogInformation response.Text
+        //logger.LogInformation response.Text
 
-    do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text)
+        do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text)
+
+    with ex -> 
+       AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
+       AnsiConsole.WriteException(ex)
 }
 |> Async.AwaitTask
 |> Async.RunSynchronously

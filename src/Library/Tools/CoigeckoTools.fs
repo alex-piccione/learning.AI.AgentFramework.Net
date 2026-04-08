@@ -1,4 +1,4 @@
-module Tools.CoingeckoTools
+namespace Tools.Coingecko
 
 open System.ComponentModel
 open System.Threading.Tasks
@@ -6,7 +6,7 @@ open Microsoft.Extensions.Logging
 open Alex75.Cryptocurrencies.Services.Coingecko
 open Alex75.Cryptocurrencies
 
-open Tools.ToolsBase
+open Tools
 open Tools.Coingecko.Models
 
 type CoingeckoTools (logger: ILogger, apiKey: string) =
