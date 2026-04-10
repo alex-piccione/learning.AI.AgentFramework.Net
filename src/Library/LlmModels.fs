@@ -30,15 +30,15 @@ module LlmModels
 
 
     module public GitHub =
-        //let GPT_5_2 = "openai/gpt-5.2"
-        //let PHI4_REASONING = "microsoft/Phi-4-reasoning" // require enablig tools... I don't know where
-        let Phi_4_mini_instruct = "microsoft/Phi-4-mini-instruct"
-        let MINISTRAL_3B = "mistral-ai/Ministral-3B"   // it works but is stupid
-        let GPT_5 = "openai/gpt-5"  //not works
+        let Phi_4_mini_instruct = "microsoft/Phi-4-mini-instruct"   // it returns the tool to call, not hte response
+        let Phi_4 = "microsoft/phi-4"
+        let Grok_3_mini = "xai/grok-3-mini"    // too small context, slow, not capable of complete
+        let Llama_4_Maverick_17B_FP8 = "meta/llama-4-maverick-17b-128e-instruct-fp8"   // STUPID
+        let Ministral_3_1_small = "mistral-ai/mistral-small-2503"    // WOW
+        let Grok_3 = "xai/grok-3"   // Slow, Good for Plan
         //let DEEPSEEK_R1 = "deepseek/DeepSeek-R1"  // does not support tools
         //let DeepSeek_R1_0528 = "deepseek/DeepSeek-R1-0528"  // erro calling tool
         //let DeepSeek_V3_0324 = "deepseek/DeepSeek-V3-0324" 
-        let GROK_3_mini = "xai/grok-3-mini"  // toot small context, slow, not capable of complete
 
 
     module public Mistral =
