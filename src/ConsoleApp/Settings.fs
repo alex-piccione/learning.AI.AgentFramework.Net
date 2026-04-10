@@ -11,10 +11,11 @@ type AIService =
 let service = AIService.LocalOllama
 
 let OllamaModel
+    = "gemma4:e2b" 
     //= "llama3.2:3b"
     //= "llama3.1:8b"
     //= "qwen3.5:9b"     8.8GB   *** TOO BIG ***
-    = "nemotron-3-nano:4b-q8_0"
+    //= "nemotron-3-nano:4b-q8_0"
     //= "llama3-groq-tool-use"
     //= "deepseek-r1:8b"    ** does not support tools ***
     //= "llama3-groq-tool-use:latest"
@@ -40,9 +41,10 @@ nemotron-3-nano:4b-q8_0 (4.2GB, solid tools).
 | qwen3.5:9b           | V2    | ❌     | No usage of Coingecko tool. No right output.                    |
 | llama3.1:8b          | V3    | ❌     | 
 | deepseek-r1:8b       | V3    | X      | Does not support tools                                           |
-| llama3-groq-tool-use:latest   | ❌ | With 1 call to wise it pretended to have 2 exchange rates... non-sense. |
+| llama3-groq-tool-use:latest  | ❌     | With 1 call to wise it pretended to have 2 exchange rates... non-sense. |
 | granite4:3b          |
 | granite4:3b-h        | V3    | 
+| gemma4:e2b           | V3    |
 
 
 Test Agent tools correct use
