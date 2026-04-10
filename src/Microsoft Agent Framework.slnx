@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Doc/">
+    <File Path="../doc/Models.md" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
