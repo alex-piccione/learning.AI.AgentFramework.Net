@@ -11,17 +11,15 @@ type ToolsBase (logger:ILogger) =
     abstract LogError: string -> exn -> unit
 
     default this.GetTools() =
-        let tools =
-            this.GetType().GetMethods(BindingFlags.Public ||| BindingFlags.Instance)
-            |> Seq.choose (fun m ->
-                // Only pick methods that have a Description attribute
-                let attr = m.GetCustomAttribute<DescriptionAttribute>()
-                if isNull attr then None
-                else
-                    // Create the AIFunction and upcast to AITool
-                    Some (AIFunctionFactory.Create(m, this) :> AITool)
+        this.GetType().GetMethods(BindingFlags.Public ||| BindingFlags.Instance)
+        |> Seq.choose (fun m ->
+            // Only pick methods that have a Description attribute
+            let attr = m.GetCustomAttribute<DescriptionAttribute>()
+            if isNull attr then None
+            else
+                // Create the AIFunction and upcast to AITool
+                Some (AIFunctionFactory.Create(m, this) :> AITool)
         )
-        tools
 
     default this.LogCall method info =
         if logger.IsEnabled LogLevel.Debug then

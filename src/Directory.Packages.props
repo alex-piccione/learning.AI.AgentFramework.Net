@@ -10,6 +10,7 @@
     <PackageVersion Include="FsHttp" Version="15.0.3" />
     <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0" />
     <PackageVersion Include="Microsoft.Agents.AI.Abstractions" Version="1.0.0" />
+    <PackageVersion Include="Microsoft.Agents.AI.Workflows" Version="1.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.5" />

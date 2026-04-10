@@ -8,17 +8,17 @@ type AIService =
     | GitHub
     | Mistral
 
-let service = AIService.AliBaba
+let service = AIService.LocalOllama
 
 let OllamaModel
     //= "llama3.2:3b"
     //= "llama3.1:8b"
     //= "qwen3.5:9b"     8.8GB   *** TOO BIG ***
-    //= "nemotron-3-nano:4b-q8_0"
+    = "nemotron-3-nano:4b-q8_0"
     //= "llama3-groq-tool-use"
     //= "deepseek-r1:8b"    ** does not support tools ***
     //= "llama3-groq-tool-use:latest"
-    = "granite4:3b"
+    //= "granite4:3b"
     //= "granite4:3b-h"
     //= "functiongemma:270m"
 
