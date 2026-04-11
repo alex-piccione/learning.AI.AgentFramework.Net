@@ -54,3 +54,10 @@ module LlmModels
         let Alibaba_Wan_2_6_experimental = "alibaba/wan-2.6" // generate videos
         let Nemotron_3_Super_Free = "nvidia/nemotron-3-super-120b-a12b:free"
         let Nemotron_3_Super = "nvidia/nemotron-3-super-120b-a12b"
+        let Minimax_2_5_Free = "minimax/minimax-m2.5:free"
+
+
+    module public Xiaomi =
+        let Mimo_V2_Pro = "mimo-v2-pro"
+        let Mimo_V2_Flash = "mimo-v2-flash"
+        let Mimo_V2_TTS = "mimo-v2-tts"

@@ -8,29 +8,31 @@ type AIService =
     | GitHub
     | Mistral
     | Openrouter
+    | Xiaomi
 
-let service = AIService.Openrouter
+let service = AIService.Xiaomi
 
 let OllamaModel
+    //= "dolphin3:8b"              // ❌ Does not support tools
     //= "dolphin-llama3:8b"        // ❌ Does not support tools
     //= "gemma4:e2b"               // ✅ Good
     //= "bjoernb/gemma4-e4b-fast"  // ❌TOO BIG but fast
     //= "llama3.2:3b"              // ✅ ok
-    //= "llama3.1:8b"              // meh
+    //= "llama3.1:8b"              // meh, bad bad bad
     //= "qwen3:8b"                 // slow and meh
     //= "qwen3.5:4b"               // ✅ Very Good
     //= "qwen3.5:9b"               // ❌TOO BIG, 8.8GB
-    //= "nemotron-3-nano:4b-q8_0"
+    = "nemotron-3-nano:4b-q8_0"
     //= "llama3-groq-tool-use"
     //= "deepseek-r1:8b"           // ❌ Does not support tools
     //= "llama3-groq-tool-use:latest"
     //= "llama3-gradient:8b"       // ❌ Does not support tools
-    //= "granite4:3b"                // ✅ ok, stupid sometimes?
+    //= "granite4:3b"              // ✅ ok, stupid sometimes?
     //= "granite4:3b-h"
     //= "functiongemma:270m"  dolphin-llama3:8b
-    //= "olmo-3:7b"
-    = "olmo-3:7b-instruct"
-    //= "olmo-3:7b-think"
+    //= "olmo-3:7b"                // ❌ Does not support tools
+    //= "olmo-3:7b-instruct"       // ✅ ok
+    //= "olmo-3:7b-think"          // ❌ Does not support tools
 
 
 (*

@@ -8,3 +8,4 @@ module internal LLMProviders =
     let MISTRAL_URL = "https://api.mistral.ai/v1"
     let OPENROUTER_URL = "https://openrouter.ai/api/v1"
     // "https://openrouter.ai/api/v1/chat/completions"
+    let XIAOMI_URL = "https://api.xiaomimimo.com/v1"
