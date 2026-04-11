@@ -53,3 +53,8 @@ Updated on 10/04/2026
 | Phi-4 mini reasoning      | microsoft/phi-4-mini-reasoning              |              | reasoning                   | Lightweight math/multi-step reasoning               |
 | Phi-4 multimodal instruct | microsoft/phi-4-multimodal-instruct         | 0.08 / 0.32  | streaming                   | Text + audio + image inputs                         |
 | Phi-4 reasoning           | microsoft/phi-4-reasoning                   |              | reasoning, streaming        | Open-weight reasoning model                         |
+
+
+## Openrouter
+
+https://openrouter.ai/models

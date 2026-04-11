@@ -20,17 +20,6 @@ type ExpensesTools private (logger, mcpTools:seq<McpClientTool>) =
         let clientTransport = HttpClientTransport(options, loggerFactory)
         let! mcpClient = McpClient.CreateAsync clientTransport
 
-        match mcpClient.SessionId with
-        | null | "" -> ()
-            //logger.Log(LogLevel. "No Session ID returned from server. Stateless mode assumed.")
-        | sid -> 
-            //logger.LogInformation("Captured Session ID: {sid}", sid)
-            // INJECT the header for all future requests in this transport
-            //mcpClient.
-            ()
-            //options.AdditionalHeaders.Add (map ["mcp-session-id", sid])
-
-
         let! mcpTools = mcpClient.ListToolsAsync()
         return ExpensesTools (logger, mcpTools)
     } 

@@ -2,6 +2,10 @@
 
 Add a MCP server as tools.
 You need the _ModelContextProtocol_ package.  
+
+Package v1.2 (11/04/2026) is bugged using "streamable-http" (it expected a JSON documenta starting with "data"),
+so to have it working with Python FastMCP I had to use "sse" mode.
+
   
 ```fsharp
 open ModelContextProtocol.Client;

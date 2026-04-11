@@ -28,16 +28,14 @@ let config =
         //.AddAzureKeyVault(Uri("https://your-vault.vault.azure.net/"), DefaultAzureCredential())
         .Build()
 
-let weather_model = LlmModels.OpenAI.GPT_5_mini
-let cryptocurrencies_model = LlmModels.OpenAI.GPT_5_2
-
 let openAIKey = config.Get "OpenAI api key"
 let alibabaApiKey = config.Get "AliBaba api key"
 let alibabaPlanApiKey = config.Get "AliBaba Plan api key"
 let githubToken = config.Get "GitHub token"
 let mistralApiKey = config.Get "Mistral api key"
+let openrouterApiKey = config.Get "Openrouter api key"
 
-let wheatherAgent = WeatherAgent.CreateChatClientUsingOpenAI(logger, openAIKey, weather_model)
+let wheatherAgent = WeatherAgent.CreateChatClientUsingOpenAI(logger, openAIKey, LlmModels.OpenAI.GPT_5_mini)
 
 (*
 //let question = AnsiConsole.Ask<string>("[bold green]Ask the agent about the weather:[/]")
@@ -50,12 +48,13 @@ AnsiConsole.MarkupLine($"[yellow]{response}[/]")
 
 let chatClient, model =
     match Settings.service with
-    | Settings.AIService.OpenAI -> OpenAIClientBuilder.BuildOpenAIChatClient (openAIKey, cryptocurrencies_model)
+    | Settings.AIService.OpenAI -> OpenAIClientBuilder.BuildOpenAIChatClient (openAIKey, LlmModels.OpenAI.GPT_5_2)
     | Settings.AIService.LocalOllama -> OpenAIClientBuilder.BuildLocalOllamaChatClient Settings.OllamaModel
     | Settings.AIService.AliBaba -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, LlmModels.Alibaba.Qwen_3_5_plus)
     | Settings.AIService.AliBabaPlan -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBabaPlan, alibabaPlanApiKey, LlmModels.AlibabaPlan.Zhipu)
     | Settings.AIService.GitHub -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.GitHub, githubToken, LlmModels.GitHub.Phi_4_mini_instruct)
     | Settings.AIService.Mistral -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Mistral, mistralApiKey, LlmModels.Mistral.MINISTRAL_14b_2512)
+    | Settings.AIService.Openrouter -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Openrouter, openrouterApiKey, LlmModels.Openrouter.Gemma_4_31B)
 
 let cryptocurrencyAgent = CryptocurrencyAgent(
         logger,
@@ -74,7 +73,7 @@ AnsiConsole.MarkupLine $"🤖 Agent [blue]{cryptocurrencyAgent.Name}[/] using mo
 let question = "List my open orders on Kraken."
 AnsiConsole.MarkupLine($"[cyan]{question}[/]")
 
-
+(* test local MCP
 let expensesAgent = ExpensesAgent(logger, loggerFactory, chatClient, Settings.expensesMcpServerUrl)
 
 task {
@@ -86,6 +85,7 @@ task {
 
     AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
 } |> RunTask
+*)
 
 task {
     try

@@ -21,11 +21,8 @@ module LlmModels
         let Qwen3_max_2026_01_23 = "qwen3-max-2026-01-23"
         let Qwen_Coder_Next = "qwen3-coder-next"
         let Qwen_Coder_Plus = "qwen3-coder-plus"
-
         let Zhipu = "glm-5"
-
         let Kimi = "kimi-k2.5"
-
         let MiniMax = "MiniMax-M2.5"
 
 
@@ -45,3 +42,15 @@ module LlmModels
         let MINISTRAL_14b_2512 = "ministral-14b-2512"
         let MISTRAL_MEDIUM_2505 = "mistral-medium-2505"
         let magistral_medium_2509 = "magistral-medium-2509"
+
+
+    module public Openrouter =
+        let Gemma_4_26B_A4B_Free = "google/gemma-4-26b-a4b-it:free"
+        let Gemma_4_26B_A4B = "google/gemma-4-26b-a4b-it"
+        let Gemma_4_31B_Free = "google/gemma-4-31b-it:free"
+        let Gemma_4_31B = "google/gemma-4-31b-it"
+        let Qwen_3_6_Plus = "qwen/qwen3.6-plus"
+        let Google_Lyria_3_Pro_Preview = "google/lyria-3-pro-preview" // generate songs
+        let Alibaba_Wan_2_6_experimental = "alibaba/wan-2.6" // generate videos
+        let Nemotron_3_Super_Free = "nvidia/nemotron-3-super-120b-a12b:free"
+        let Nemotron_3_Super = "nvidia/nemotron-3-super-120b-a12b"

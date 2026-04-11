@@ -9,6 +9,7 @@ type LLMProvider =
     | AliBabaPlan
     | GitHub
     | Mistral
+    | Openrouter
 
 /// Helper for create OpenAI Client
 type OpenAIClientBuilder () =
@@ -33,6 +34,7 @@ type OpenAIClientBuilder () =
             | LLMProvider.AliBabaPlan -> Constants.LLMProviders.ALIBABA_PLAN_URL
             | LLMProvider.GitHub -> Constants.LLMProviders.GITHUB_URL
             | LLMProvider.Mistral -> Constants.LLMProviders.MISTRAL_URL
+            | LLMProvider.Openrouter -> Constants.LLMProviders.OPENROUTER_URL
 
         let credentials = ClientModel.ApiKeyCredential apiKey
         let options = OpenAI.OpenAIClientOptions()
