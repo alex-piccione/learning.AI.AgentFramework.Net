@@ -21,11 +21,13 @@ type Ticker with
 type OpenOrder = {
     [<Description("When the order was created")>]
     CreatedOn: DateTime
-    [<Description("The main currency")>]
+    [<Description("Main currency")>]
     MainCurrency: string
-    [<Description("The quote currency")>]
+    [<Description("Quote currency")>]
     QuoteCurrency: string
-    [<Description("The side of the order (Buy or Sell)")>]
+    [<Description("Quantity of main currency")>]
+    Quantity: decimal
+    [<Description("Side of the order (Buy or Sell)")>]
     Side: string
 }
 
@@ -35,6 +37,7 @@ type OpenOrder with
             CreatedOn = order.OpenTime
             MainCurrency = order.Pair.Main.UpperCase
             QuoteCurrency = order.Pair.Quote.UpperCase
+            Quantity = order.BuyOrSellQuantity
             Side =
                 match order.Side with
                 | Alex75.Cryptocurrencies.OrderSide.Buy -> "Buy"

@@ -56,3 +56,7 @@ type ConfigurationRootExtensions =
         match System.Convert.ChangeType(value, typeof<'T>) with
         | (:? 'T as result) -> result
         | _ -> failwithf "Invalid config type for %s: expected %s" key (typeof<'T>.Name)
+
+
+/// AwaitTask + RunSynchronously
+let RunTask task = task |> Async.AwaitTask |> Async.RunSynchronously

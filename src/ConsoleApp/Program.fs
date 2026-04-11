@@ -7,18 +7,20 @@ open Helper
 open Agents.Wheater
 open Spectre.Console
 open Agents.Cryptocurrency
+open Agents.Expenses
 open OpenAIClientBuilder
 
 let ct = CancellationToken()
 
-let logger =
-    LoggerFactory.Create( // not disposed
-        fun builder ->
-            builder
-                .AddConsole()
-                .SetMinimumLevel(LogLevel.Debug) // Set minimum log level to Debug
-            |> ignore
-        ).CreateLogger("ConsoleApp")
+let loggerFactory = LoggerFactory.Create(
+    fun builder ->
+        builder
+            .AddConsole()
+            .SetMinimumLevel(LogLevel.Debug) // Set minimum log level to Debug
+        |> ignore
+    )
+
+let logger = loggerFactory.CreateLogger("ConsoleApp")
 
 let config =
     ConfigurationBuilder()
@@ -72,6 +74,19 @@ AnsiConsole.MarkupLine $"🤖 Agent [blue]{cryptocurrencyAgent.Name}[/] using mo
 let question = "List my open orders on Kraken."
 AnsiConsole.MarkupLine($"[cyan]{question}[/]")
 
+
+let expensesAgent = ExpensesAgent(logger, loggerFactory, chatClient, Settings.expensesMcpServerUrl)
+
+task {
+    let! response = expensesAgent.Ask("Yesterday I bought pizza for dinner. paid cash. 5 EUR. Add the record to the expenses.", ct)
+
+    match response.Usage with
+    | null -> ()
+    | usage -> renderUsage usage
+
+    AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
+} |> RunTask
+
 task {
     try
         let! response = cryptocurrencyAgent.Ask(question, ct)
@@ -81,7 +96,7 @@ task {
         | usage -> renderUsage usage
         
         try
-            do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text)
+            do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())
         with ex ->
             //logger.LogWarning "Failed to use DisplayMarkdownAsync"
             logger.LogInformation response.Text
@@ -90,7 +105,8 @@ task {
        AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
        AnsiConsole.WriteException(ex)
 }
-|> Async.AwaitTask
-|> Async.RunSynchronously
+|> RunTask
+
+loggerFactory.Dispose()
 
 ()

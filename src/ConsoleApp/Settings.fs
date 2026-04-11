@@ -10,25 +10,24 @@ type AIService =
 
 let service = AIService.LocalOllama
 
-let OllamaModel
-    = "gemma4:e2b" 
-    //= "llama3.2:3b"
-    //= "llama3.1:8b"
-    //= "qwen3.5:9b"     8.8GB   *** TOO BIG ***
+let OllamaModel    
+    //= "dolphin-llama3:8b"        // ❌ Does not support tools
+    //= "gemma4:e2b"               // ✅ Good
+    //= "bjoernb/gemma4-e4b-fast"  // TOO BIG but fast
+    //= "llama3.2:3b"                // ok
+    //= "llama3.1:8b"              // meh
+    //= "qwen3:8b"                 // slow and meh
+    //= "qwen3.5:4b"               // ✅ Very Good
+    //= "qwen3.5:9b"               // TOO BIG, 8.8GB 
     //= "nemotron-3-nano:4b-q8_0"
     //= "llama3-groq-tool-use"
-    //= "deepseek-r1:8b"    ** does not support tools ***
+    //= "deepseek-r1:8b"           // ❌ Does not support tools
     //= "llama3-groq-tool-use:latest"
-    //= "granite4:3b"
+    //= "llama3-gradient:8b"       // ❌ Does not support tools
+    = "granite4:3b"              // ❌ stupid
     //= "granite4:3b-h"
     //= "functiongemma:270m"
 
-(*
-llama3.2:3b (2GB, excellent tool use, multilingual/agentic) – Best starter.
-dolphin-llama3:8b (4.7GB, strong coding/tools, uncensored).
-qwen3.5:4b or qwen3.5:2b (3.4GB/2.7GB, good multilingual/tools, but finicky—test first).
-nemotron-3-nano:4b-q8_0 (4.2GB, solid tools).
-*)
 
 (*
 
@@ -47,10 +46,6 @@ nemotron-3-nano:4b-q8_0 (4.2GB, solid tools).
 | gemma4:e2b           | V3    |
 
 
-Test Agent tools correct use
-
-
-
 ✅ or ✔️
 ❌ or ⚠️
 🤖
@@ -60,3 +55,8 @@ Test Agent tools correct use
 ⚙️ Settings
 🛠️ Tools
 *)
+
+
+
+//let expensesMcpServerUrl = "http://localhost:8000/mcp"
+let expensesMcpServerUrl = "http://localhost:8000/sse"

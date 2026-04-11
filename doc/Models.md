@@ -1,10 +1,5 @@
 # Models
 
-## MCP server
-
-To add a MCP server as tools:
-
-
 ## GitHub models
 
 https://docs.github.com/en/billing/reference/costs-for-github-models

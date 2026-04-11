@@ -15,9 +15,11 @@
     <Compile Include="Tools\CoigeckoTools.fs" />
     <Compile Include="Tools\RandomTools.fs" />
     <Compile Include="Tools\OpenMeteoTools.fs" />
+    <Compile Include="Tools\ExpensesTools.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />
+    <Compile Include="Agents\ExpensesAgent.fs" />
     <Compile Include="OpenAIClientBuilder.fs" />
   </ItemGroup>
 
@@ -31,6 +33,7 @@
     <PackageReference Include="Microsoft.Agents.AI.OpenAI" />
     <PackageReference Include="Microsoft.Agents.AI.Workflows" />
     <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="ModelContextProtocol" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,11 @@
 # Microsoft Agents Framework 
 
-Playground for Microsoft Agent Framework
+Playground for Microsoft Agent Framework.  
+  
+Official docs: 
+GitHub: https://github.com/microsoft/agent-framework  
 
-https://github.com/microsoft/agent-framework
-
-This tool uses OpenAI compatible API.  
+This project uses OpenAI compatible API hosts.  
 
 ## OpenAI clients
 
@@ -30,13 +31,17 @@ Think of the **OpenAIClient** as a factory — you call .GetXxxClient() on it to
 | Videos.VideoClientVideo generation (Sora) |
 
 
-## Weather API
+## Agent Tools
 
 - Open-Meteo - Free API for weather forecasts, historical data, and climate information. No API key required.
 - weatherapi.com - not tried yet, but seems to have a free tier with 1 million calls/month. Requires API key.
 - KrakenAPIClient - Client for Kraken exchange API 
 - Cingecko API Client - Client for Coingecko API
 - Wise aPI Client - Client for Wise API (to get fiat exchange rates, not available from Coingecko)
+
+## OCR
+
+https://ollama.com/library/glm-ocr
 
 ## Tools/Libraries
 
