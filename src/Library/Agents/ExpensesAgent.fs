@@ -22,7 +22,7 @@ type ExpensesAgent (logger:ILogger, loggerFactory, chatClient:IChatClient, expen
     - Edit expenses records
     - Delete expenses records
 
-    If there is a doubt about an istruction or an info, you ask the user for clarification.
+    If there is a doubt about an istruction or an info, you ask to the user for clarification.
     """
 
     let agent = chatClient.AsAIAgent(instructions, name, description, tools)

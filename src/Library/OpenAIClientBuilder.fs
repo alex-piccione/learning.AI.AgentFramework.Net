@@ -11,6 +11,7 @@ type LLMProvider =
     | Mistral
     | Openrouter
     | Xiaomi
+    | Google
 
 /// Helper for create OpenAI Client
 type OpenAIClientBuilder () =
@@ -37,6 +38,7 @@ type OpenAIClientBuilder () =
             | LLMProvider.Mistral -> Constants.LLMProviders.MISTRAL_URL
             | LLMProvider.Openrouter -> Constants.LLMProviders.OPENROUTER_URL
             | LLMProvider.Xiaomi -> Constants.LLMProviders.XIAOMI_URL
+            | LLMProvider.Google -> Constants.LLMProviders.GOOGLE_URL
 
         let credentials = ClientModel.ApiKeyCredential apiKey
         let options = OpenAI.OpenAIClientOptions()

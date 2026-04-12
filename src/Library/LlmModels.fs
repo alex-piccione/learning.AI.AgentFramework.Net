@@ -61,3 +61,9 @@ module LlmModels
         let Mimo_V2_Pro = "mimo-v2-pro"
         let Mimo_V2_Flash = "mimo-v2-flash"
         let Mimo_V2_TTS = "mimo-v2-tts"
+
+
+    module public Google =
+        let Gemini_3_1_Flash_Lite_preview = "gemini-3.1-flash-lite-preview"
+        let Gemini_2_5_Pro = "gemini-2.5-pro"
+        let Gemma_4_26B = "gemma-4-26b-a4b-it"

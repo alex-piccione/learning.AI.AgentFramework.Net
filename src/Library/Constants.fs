@@ -9,3 +9,4 @@ module internal LLMProviders =
     let OPENROUTER_URL = "https://openrouter.ai/api/v1"
     // "https://openrouter.ai/api/v1/chat/completions"
     let XIAOMI_URL = "https://api.xiaomimimo.com/v1"
+    let GOOGLE_URL = "https://generativelanguage.googleapis.com/v1beta/openai"

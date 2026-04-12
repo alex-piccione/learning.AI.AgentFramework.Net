@@ -35,6 +35,7 @@ let githubToken = config.Get "GitHub token"
 let mistralApiKey = config.Get "Mistral api key"
 let openrouterApiKey = config.Get "Openrouter api key"
 let xiaomiApiKey = config.Get "Xiaomi api key"
+let googleApiKey = config.Get "Google api key"
 
 let wheatherAgent = WeatherAgent.CreateChatClientUsingOpenAI(logger, openAIKey, LlmModels.OpenAI.GPT_5_mini)
 
@@ -57,6 +58,7 @@ let chatClient, model =
     | Settings.AIService.Mistral -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Mistral, mistralApiKey, LlmModels.Mistral.MINISTRAL_14b_2512)
     | Settings.AIService.Openrouter -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Openrouter, openrouterApiKey, LlmModels.Openrouter.Minimax_2_5_Free)
     | Settings.AIService.Xiaomi -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Xiaomi, xiaomiApiKey, LlmModels.Xiaomi.Mimo_V2_Pro)
+    | Settings.AIService.Google -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
 
 let cryptocurrencyAgent = CryptocurrencyAgent(
         logger,

@@ -9,8 +9,9 @@ type AIService =
     | Mistral
     | Openrouter
     | Xiaomi
+    | Google
 
-let service = AIService.Xiaomi
+let service = AIService.LocalOllama
 
 let OllamaModel
     //= "dolphin3:8b"              // ❌ Does not support tools
@@ -22,17 +23,23 @@ let OllamaModel
     //= "qwen3:8b"                 // slow and meh
     //= "qwen3.5:4b"               // ✅ Very Good
     //= "qwen3.5:9b"               // ❌TOO BIG, 8.8GB
-    = "nemotron-3-nano:4b-q8_0"
+    //= "nemotron-3-nano:4b"       // ok
+    //= "nemotron-3-nano:4b-q8_0"
     //= "llama3-groq-tool-use"
     //= "deepseek-r1:8b"           // ❌ Does not support tools
+    //= "deepseek-r1:7b"           // ❌ Does not support tools
     //= "llama3-groq-tool-use:latest"
     //= "llama3-gradient:8b"       // ❌ Does not support tools
     //= "granite4:3b"              // ✅ ok, stupid sometimes?
     //= "granite4:3b-h"
     //= "functiongemma:270m"  dolphin-llama3:8b
     //= "olmo-3:7b"                // ❌ Does not support tools
-    //= "olmo-3:7b-instruct"       // ✅ ok
+    = "olmo-3:7b-instruct"         // ✅ ok
     //= "olmo-3:7b-think"          // ❌ Does not support tools
+    //= "orca-mini:7b"             // ❌ Does not support tools"
+    //= "orca-mini:7b-v3-q8_0"     // ❌ Does not support tools"
+    //= "orca-mini:13b"            // ❌ Does not support tools and is Too big (11GB) but fast!
+    //= "orca-mini:13b-v2-q3_K_L"  // ❌ Does not support tools"
 
 
 (*
