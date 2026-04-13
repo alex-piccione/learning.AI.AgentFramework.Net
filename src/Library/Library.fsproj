@@ -7,6 +7,7 @@
     <Compile Include="Helper.fs" />
     <Compile Include="Constants.fs" />
     <Compile Include="LlmModels.fs" />
+    <Compile Include="Tools\Models\TimeTools.fs" />
     <Compile Include="Tools\Models\OpenMeteo.models.fs" />
     <Compile Include="Tools\Models\Coingecko.models.fs" />
     <Compile Include="Tools\Models\Kraken.models.fs" />
@@ -18,6 +19,7 @@
     <Compile Include="Tools\OpenMeteoTools.fs" />
     <Compile Include="Tools\ExpensesTools.fs" />
     <Compile Include="Tools\MusicistTools.fs" />
+    <Compile Include="Agents\TokenConsumptionMiddleware.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />

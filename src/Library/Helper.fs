@@ -1,5 +1,10 @@
 ﻿module Helper
 
-/// AwaitTask + RunSynchronously
-let RunTask task = task |> Async.AwaitTask |> Async.RunSynchronously
+open System
 
+/// AwaitTask + RunSynchronously
+let runTask task = task |> Async.AwaitTask |> Async.RunSynchronously
+
+let getValueOrDefault (nullable: Nullable<'T>) (defaultValue: 'T) =
+    if nullable.HasValue then nullable.Value
+    else defaultValue

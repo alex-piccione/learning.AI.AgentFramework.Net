@@ -46,7 +46,7 @@ type OpenAIClientBuilder () =
         //OpenAI.Chat.ChatClient(model, credentials, options).AsIChatClient(), model
         OpenAIClient(credentials, options).GetChatClient(model).AsIChatClient(), model
 
-    (*
+    (* Another way to create a OpenAI compatible ChatClient
     using Microsoft.Extensions.AI;
 
     IChatClient client =

@@ -9,7 +9,7 @@ open Tools.helper
 open Tools.Wise
 open Tools.Kraken
 
-type CryptocurrencyAgent private (agent, session) =
+type CryptocurrencyAgent private (agent:AIAgent, session) =
 
     let options:AgentRunOptions = AgentRunOptions()
 
@@ -29,7 +29,11 @@ type CryptocurrencyAgent private (agent, session) =
         // select a settings
         let settings = Agents.Settings.Cryptocurrency.V3
 
-        let agent = chatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
+        let agent:AIAgent = chatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
+
+        // add middleware
+        let agent = agent.AsBuilder().Use(TokenConsumptionMiddleware.run, null).Build()
+
         let! session = agent.CreateSessionAsync().AsTask()
 
         return CryptocurrencyAgent(agent, session)

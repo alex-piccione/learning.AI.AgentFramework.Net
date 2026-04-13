@@ -59,4 +59,4 @@ type ConfigurationRootExtensions =
 
 
 /// AwaitTask + RunSynchronously
-let RunTask task = task |> Async.AwaitTask |> Async.RunSynchronously
+let runTask task = task |> Async.AwaitTask |> Async.RunSynchronously
