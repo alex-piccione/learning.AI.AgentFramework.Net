@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Helper.fs" />
     <Compile Include="Constants.fs" />
     <Compile Include="LlmModels.fs" />
     <Compile Include="Tools\Models\OpenMeteo.models.fs" />

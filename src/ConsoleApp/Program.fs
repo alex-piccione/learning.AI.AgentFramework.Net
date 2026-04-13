@@ -73,10 +73,10 @@ let cryptocurrencyAgent = CryptocurrencyAgent(
 
 AnsiConsole.MarkupLine $"🤖 Agent [blue]{cryptocurrencyAgent.Name}[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
 
-(* test local MCP
-let expensesAgent = ExpensesAgent(logger, loggerFactory, chatClient, Settings.expensesMcpServerUrl)
-
+//(* test local MCP
 task {
+    let! expensesAgent = ExpensesAgent.Create (logger, loggerFactory, chatClient, Settings.expensesMcpServerUrl)
+
     let! response = expensesAgent.Ask("Yesterday I bought pizza for dinner. paid cash. 5 EUR. Add the record to the expenses.", ct)
 
     match response.Usage with
@@ -85,7 +85,7 @@ task {
 
     AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
 } |> RunTask
-*)
+//*)
 
 (* test Google Lyria 3
 let musicistAgent = MusicistAgent(logger, chatClient, googleApiKeyForLyria, "lyria-3-clip-preview")
