@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Doc/">
     <File Path="../doc/MCP Tools.md" />
+    <File Path="../doc/Middleware.md" />
     <File Path="../doc/Models.md" />
   </Folder>
   <Folder Name="/Solution Items/">

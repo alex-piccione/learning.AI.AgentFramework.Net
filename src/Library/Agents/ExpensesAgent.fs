@@ -6,7 +6,7 @@ open Microsoft.Agents.AI
 open Tools.helper
 open Tools.Expenses
 
-type ExpensesAgent private (logger:ILogger, agent, session) =
+type ExpensesAgent private (agent, session) =
    
     static member Create (logger:ILogger, loggerFactory, chatClient:IChatClient, expensesMcpServerUrl) = task {
         let! expensesTools = ExpensesTools.CreateAsync(logger, expensesMcpServerUrl, loggerFactory)
@@ -27,12 +27,11 @@ type ExpensesAgent private (logger:ILogger, agent, session) =
         let agent = chatClient.AsAIAgent(instructions, name, description, tools)
         let! session = agent.CreateSessionAsync().AsTask()
 
-        return ExpensesAgent(logger, agent, session)
+        return ExpensesAgent(agent, session)
     }
 
     member _.Ask (question:string, ct) = task {
         let options:AgentRunOptions = AgentRunOptions()
-        let! response = agent.RunAsync(question, session, options, ct)
-        return response
+        return! agent.RunAsync(question, session, options, ct)
     }
 

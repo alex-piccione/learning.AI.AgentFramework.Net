@@ -9,9 +9,9 @@
     <PackageVersion Include="FSharp.Core" Version="11.0.100" />
     <PackageVersion Include="FsHttp" Version="15.0.3" />
     <PackageVersion Include="Google.GenAI" Version="1.6.1" />
-    <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0" />
-    <PackageVersion Include="Microsoft.Agents.AI.Abstractions" Version="1.0.0" />
-    <PackageVersion Include="Microsoft.Agents.AI.Workflows" Version="1.0.0" />
+    <PackageVersion Include="Microsoft.Agents.AI" Version="1.1.0" />
+    <PackageVersion Include="Microsoft.Agents.AI.Abstractions" Version="1.1.0" />
+    <PackageVersion Include="Microsoft.Agents.AI.Workflows" Version="1.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.5" />
@@ -27,7 +27,7 @@
     <PackageVersion Include="NUnit" Version="4.5.1" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.12.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
-    <PackageVersion Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0" />
+    <PackageVersion Include="Microsoft.Agents.AI.OpenAI" Version="1.1.0" />
     <PackageVersion Include="OpenAI" Version="2.8.0" />
     <PackageVersion Include="Alex75.KrakenApiClient" Version="26.4.5" />
     <PackageVersion Include="Unquote" Version="7.0.1" />

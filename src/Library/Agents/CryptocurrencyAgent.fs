@@ -15,10 +15,10 @@ type CryptocurrencyAgent private (agent, session) =
 
     static member Create(logger:ILogger,
         chatClient:IChatClient,
-        krakenPublicKey:string,
-        krakenPrivateKey:string,
-        coingeckoApiKey:string,
-        wiseApiKey:string) = task {
+        krakenPublicKey,
+        krakenPrivateKey,
+        coingeckoApiKey,
+        wiseApiKey) = task {
 
         let krakenTools = KrakenTools(logger, krakenPublicKey, krakenPrivateKey).GetTools()
         let coingeckoTools = CoingeckoTools(logger, coingeckoApiKey).GetTools()
