@@ -9,6 +9,7 @@ open Spectre.Console
 open Agents.Cryptocurrency
 open Agents.Expenses
 open OpenAIClientBuilder
+open Agents.Musicist
 
 let ct = CancellationToken()
 
@@ -36,6 +37,7 @@ let mistralApiKey = config.Get "Mistral api key"
 let openrouterApiKey = config.Get "Openrouter api key"
 let xiaomiApiKey = config.Get "Xiaomi api key"
 let googleApiKey = config.Get "Google api key"
+let googleApiKeyForLyria = config.Get "Google api key for Lyria"
 
 let wheatherAgent = WeatherAgent.CreateChatClientUsingOpenAI(logger, openAIKey, LlmModels.OpenAI.GPT_5_mini)
 
@@ -71,12 +73,6 @@ let cryptocurrencyAgent = CryptocurrencyAgent(
 
 AnsiConsole.MarkupLine $"🤖 Agent [blue]{cryptocurrencyAgent.Name}[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
 
-//let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
-//let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
-//let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
-let question = "List my open orders on Kraken."
-AnsiConsole.MarkupLine($"[cyan]{question}[/]")
-
 (* test local MCP
 let expensesAgent = ExpensesAgent(logger, loggerFactory, chatClient, Settings.expensesMcpServerUrl)
 
@@ -91,6 +87,35 @@ task {
 } |> RunTask
 *)
 
+(* test Google Lyria 3
+let musicistAgent = MusicistAgent(logger, chatClient, googleApiKeyForLyria, "lyria-3-clip-preview")
+
+task {
+    let song = """
+        Create a prog rock song for Pablo who is riding his Caballero motorbike.
+        He has fun while driving on mountain roads and in narrow paths in the wood.
+         He has a lot of fun and is happy.
+        15 seconds long.
+        Save it in D:/AI-songs/caballero.mp3
+        """
+
+    AnsiConsole.MarkupLine($"[cyan]{song}[/]")
+    let! response = musicistAgent.Ask(song, ct)
+
+    match response.Usage with
+    | null -> ()
+    | usage -> renderUsage usage
+
+    AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
+} |> RunTask
+*)
+
+//let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
+//let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
+//let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
+let question = "List my open orders on Kraken."
+AnsiConsole.MarkupLine($"[cyan]{question}[/]")
+
 task {
     try
         let! response = cryptocurrencyAgent.Ask(question, ct)
@@ -98,14 +123,14 @@ task {
         match response.Usage with
         | null -> ()
         | usage -> renderUsage usage
-        
+
         try
             do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())
         with ex ->
             //logger.LogWarning "Failed to use DisplayMarkdownAsync"
             logger.LogInformation response.Text
 
-    with ex -> 
+    with ex ->
        AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
        AnsiConsole.WriteException(ex)
 }

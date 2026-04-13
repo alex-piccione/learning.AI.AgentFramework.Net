@@ -16,10 +16,12 @@
     <Compile Include="Tools\RandomTools.fs" />
     <Compile Include="Tools\OpenMeteoTools.fs" />
     <Compile Include="Tools\ExpensesTools.fs" />
+    <Compile Include="Tools\MusicistTools.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />
     <Compile Include="Agents\ExpensesAgent.fs" />
+    <Compile Include="Agents\MusicistAgent.fs" />
     <Compile Include="OpenAIClientBuilder.fs" />
   </ItemGroup>
 
@@ -28,6 +30,7 @@
     <PackageReference Include="Alex75.KrakenApiClient" />
     <PackageReference Include="FSharp.Core" />
     <PackageReference Include="FsHttp" />
+    <PackageReference Include="Google.GenAI" />
     <PackageReference Include="Microsoft.Agents.AI" />
     <PackageReference Include="Microsoft.Agents.AI.Abstractions" />
     <PackageReference Include="Microsoft.Agents.AI.OpenAI" />

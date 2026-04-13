@@ -14,7 +14,7 @@ type ExpensesAgent (logger:ILogger, loggerFactory, chatClient:IChatClient, expen
     let tools = asList [expensesTools.GetTools()]
 
     let name = "Expenses"
-    let description = "Agent for managing the Expenses registry of hte user."
+    let description = "Agent for managing the Expenses registry of the user."
     let instructions = """
     You use the available tools for:
     - Add expenses records

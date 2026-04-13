@@ -8,6 +8,7 @@
     <PackageVersion Include="Foq" Version="1.8.0" />
     <PackageVersion Include="FSharp.Core" Version="11.0.100" />
     <PackageVersion Include="FsHttp" Version="15.0.3" />
+    <PackageVersion Include="Google.GenAI" Version="1.6.1" />
     <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0" />
     <PackageVersion Include="Microsoft.Agents.AI.Abstractions" Version="1.0.0" />
     <PackageVersion Include="Microsoft.Agents.AI.Workflows" Version="1.0.0" />

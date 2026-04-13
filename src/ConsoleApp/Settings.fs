@@ -16,7 +16,7 @@ let service = AIService.LocalOllama
 let OllamaModel
     //= "dolphin3:8b"              // ❌ Does not support tools
     //= "dolphin-llama3:8b"        // ❌ Does not support tools
-    //= "gemma4:e2b"               // ✅ Good
+    = "gemma4:e2b"               // ✅ Good
     //= "bjoernb/gemma4-e4b-fast"  // ❌TOO BIG but fast
     //= "llama3.2:3b"              // ✅ ok
     //= "llama3.1:8b"              // meh, bad bad bad
@@ -34,7 +34,7 @@ let OllamaModel
     //= "granite4:3b-h"
     //= "functiongemma:270m"  dolphin-llama3:8b
     //= "olmo-3:7b"                // ❌ Does not support tools
-    = "olmo-3:7b-instruct"         // ✅ ok
+    //= "olmo-3:7b-instruct"         // ✅ ok
     //= "olmo-3:7b-think"          // ❌ Does not support tools
     //= "orca-mini:7b"             // ❌ Does not support tools"
     //= "orca-mini:7b-v3-q8_0"     // ❌ Does not support tools"
