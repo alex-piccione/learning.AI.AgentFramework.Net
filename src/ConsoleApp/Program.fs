@@ -2,14 +2,13 @@
 open System.Threading
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Logging
-
-open Helper
-open Agents.Wheater
 open Spectre.Console
+open OpenAIClientBuilder
+open Agents.Wheater
 open Agents.Cryptocurrency
 open Agents.Expenses
-open OpenAIClientBuilder
 open Agents.Musicist
+open Helper
 
 let ct = CancellationToken()
 
@@ -17,7 +16,7 @@ let loggerFactory = LoggerFactory.Create(
     fun builder ->
         builder
             .AddConsole()
-            .SetMinimumLevel(LogLevel.Debug) // Set minimum log level to Debug
+            .SetMinimumLevel(LogLevel.Debug) // Set minimum log level
         |> ignore
     )
 
@@ -62,18 +61,46 @@ let chatClient, model =
     | Settings.AIService.Xiaomi -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Xiaomi, xiaomiApiKey, LlmModels.Xiaomi.Mimo_V2_Pro)
     | Settings.AIService.Google -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
 
-let cryptocurrencyAgent = CryptocurrencyAgent(
-        logger,
-        chatClient,
-        config.Get "Kraken:public key",
-        config.Get "Kraken:private key",
-        config.Get "Coigecko:api key",
-        config.Get "Wise:api key"
-        )
+//let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
+//let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
+//let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
+let question = "List my open orders on Kraken."
+AnsiConsole.MarkupLine($"[cyan]{question}[/]")
 
-AnsiConsole.MarkupLine $"🤖 Agent [blue]{cryptocurrencyAgent.Name}[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
+task {
+    try
+        let! cryptocurrencyAgent = CryptocurrencyAgent.Create(
+            logger,
+            chatClient,
+            config.Get "Kraken:public key",
+            config.Get "Kraken:private key",
+            config.Get "Coigecko:api key",
+            config.Get "Wise:api key"
+            )
 
-//(* test local MCP
+        AnsiConsole.MarkupLine $"🤖 Agent [blue]CryptocurrencyAgent[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
+
+        let! response = cryptocurrencyAgent.Ask(question, ct)
+
+        match response.Usage with
+        | null -> ()
+        | usage -> renderUsage usage
+
+        try
+            do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())
+        with ex ->
+            //logger.LogWarning "Failed to use DisplayMarkdownAsync"
+            logger.LogInformation response.Text
+
+    with ex ->
+       AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
+       AnsiConsole.WriteException(ex)
+}
+|> RunTask
+
+
+
+(* test local MCP
 task {
     let! expensesAgent = ExpensesAgent.Create (logger, loggerFactory, chatClient, Settings.expensesMcpServerUrl)
 
@@ -85,7 +112,7 @@ task {
 
     AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
 } |> RunTask
-//*)
+*)
 
 (* test Google Lyria 3
 let musicistAgent = MusicistAgent(logger, chatClient, googleApiKeyForLyria, "lyria-3-clip-preview")
@@ -110,31 +137,6 @@ task {
 } |> RunTask
 *)
 
-//let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
-//let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
-//let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
-let question = "List my open orders on Kraken."
-AnsiConsole.MarkupLine($"[cyan]{question}[/]")
-
-task {
-    try
-        let! response = cryptocurrencyAgent.Ask(question, ct)
-
-        match response.Usage with
-        | null -> ()
-        | usage -> renderUsage usage
-
-        try
-            do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())
-        with ex ->
-            //logger.LogWarning "Failed to use DisplayMarkdownAsync"
-            logger.LogInformation response.Text
-
-    with ex ->
-       AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
-       AnsiConsole.WriteException(ex)
-}
-|> RunTask
 
 loggerFactory.Dispose()
 

@@ -1,6 +1,5 @@
 namespace Agents.Cryptocurrency
 
-open System.Threading
 open Microsoft.Extensions.Logging
 open Microsoft.Agents.AI
 open Microsoft.Extensions.AI
@@ -10,32 +9,32 @@ open Tools.helper
 open Tools.Wise
 open Tools.Kraken
 
-type CryptocurrencyAgent (
-    logger:ILogger,
-    chatClient:IChatClient,
-    krakenPublicKey:string,
-    krakenPrivateKey:string,
-    coingeckoApiKey:string,
-    wiseApiKey:string
-    ) =
+type CryptocurrencyAgent private (agent, session) =
 
-    let krakenTools = KrakenTools(logger, krakenPublicKey, krakenPrivateKey).GetTools()
-    let coingeckoTools = CoingeckoTools(logger, coingeckoApiKey).GetTools()
-    let wiseTools = WiseTools(logger, wiseApiKey).GetTools()
+    let options:AgentRunOptions = AgentRunOptions()
 
-    let tools = asList [krakenTools; coingeckoTools; wiseTools]
+    static member Create(logger:ILogger,
+        chatClient:IChatClient,
+        krakenPublicKey:string,
+        krakenPrivateKey:string,
+        coingeckoApiKey:string,
+        wiseApiKey:string) = task {
 
-    // select a settings
-    let settings = Agents.Settings.Cryptocurrency.V3
+        let krakenTools = KrakenTools(logger, krakenPublicKey, krakenPrivateKey).GetTools()
+        let coingeckoTools = CoingeckoTools(logger, coingeckoApiKey).GetTools()
+        let wiseTools = WiseTools(logger, wiseApiKey).GetTools()
 
-    let agent = chatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
-    let session = agent.CreateSessionAsync().AsTask() |> Async.AwaitTask |> Async.RunSynchronously
+        let tools = asList [krakenTools; coingeckoTools; wiseTools]
 
-    member _.Name = settings.Name
-    member _.Instructions = settings.Instructions
+        // select a settings
+        let settings = Agents.Settings.Cryptocurrency.V3
 
-    member _.Ask (question:string, ct:CancellationToken) = task {
-        let options:AgentRunOptions = AgentRunOptions()
-        let! response = agent.RunAsync(question, session, options, ct)
-        return response
+        let agent = chatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
+        let! session = agent.CreateSessionAsync().AsTask()
+
+        return CryptocurrencyAgent(agent, session)
+    }
+
+    member _.Ask (question:string, ct) = task {
+        return! agent.RunAsync(question, session, options, ct)
     }
