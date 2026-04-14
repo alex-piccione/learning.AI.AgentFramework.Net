@@ -11,7 +11,7 @@ open Agents.Cryptocurrency
 open Agents.Expenses
 open Agents.Musicist
 
-open Middleware.AgentCallTelemetryMiddleware
+open Middlewares
 
 let ct = CancellationToken()
 
@@ -65,9 +65,9 @@ let chatClient, model =
     | Settings.AIService.Google -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
 
 // create Middlewares
-let agentCallTelemetryMiddleware = AgentCallTelemetryMiddleware(logger, LogType.Detailed)
-
-let functionCallMiddleware = FunctionCallMiddleware.FunctionCallMiddleware(logger)
+let agentTelemetryMiddleware = AgentTelemetryMiddleware(logger, LogType.Detailed)
+let functionMiddleware = FunctionMiddleware(logger)
+let chatClientMiddleware = ChatClientCallMiddleware(logger)
 
 //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
 //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
@@ -84,17 +84,18 @@ let tasc = task {
             config.Get "Kraken:private key",
             config.Get "Coigecko:api key",
             config.Get "Wise:api key",
-            [agentCallTelemetryMiddleware],
-            [functionCallMiddleware]
+            [agentTelemetryMiddleware],
+            [functionMiddleware],
+            [chatClientMiddleware]
             )
 
-        AnsiConsole.MarkupLine $"🤖 :robot: Agent [blue]CryptocurrencyAgent[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
+        AnsiConsole.MarkupLine $"🤖 Agent [blue]CryptocurrencyAgent[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
 
         let! response = cryptocurrencyAgent.Ask(question, ct)
 
-        AnsiConsole.MarkupLine($"Total Agent calls: [yellow]{agentCallTelemetryMiddleware.CallsCount}[/]")
-        AnsiConsole.MarkupLine($"Total used tokens: [yellow]{agentCallTelemetryMiddleware.UsedTokens}[/]")
-        AnsiConsole.MarkupLine($"Total elapsed time: [yellow]{agentCallTelemetryMiddleware.CallsExecutionTime}[/]")
+        AnsiConsole.MarkupLine($"Total Agent calls: [yellow]{agentTelemetryMiddleware.CallsCount}[/]")
+        AnsiConsole.MarkupLine($"Total used tokens: [yellow]{agentTelemetryMiddleware.UsedTokens}[/]")
+        AnsiConsole.MarkupLine($"Total elapsed time: [yellow]{agentTelemetryMiddleware.CallsExecutionTime}[/]")
         
 
         //match response.Usage with
@@ -111,7 +112,7 @@ let tasc = task {
        AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
        AnsiConsole.WriteException(ex)
 }
-tasc.Spinner(Spinner.Known.Star) //|> Async.RunSynchronously
+tasc.Spinner(Spinner.Known.BluePulse) //|> Async.RunSynchronously
 //|> Async.Awa
 |> runTask
 

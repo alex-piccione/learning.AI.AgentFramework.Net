@@ -1,4 +1,4 @@
-﻿namespace Middleware.AgentCallTelemetryMiddleware
+﻿namespace Middlewares
 
 open System
 open System.Threading
@@ -17,7 +17,7 @@ type LogType =
     | Simple
     | Detailed
 
-type AgentCallTelemetryMiddleware (logger:ILogger, logType:LogType) =
+type AgentTelemetryMiddleware (logger:ILogger, logType:LogType) =
 
     let mutable tokens:int64 = 0L
     let mutable agentCallsCount:int64 = 0L
@@ -27,7 +27,7 @@ type AgentCallTelemetryMiddleware (logger:ILogger, logType:LogType) =
     member _.CallsCount = agentCallsCount
     member _.CallsExecutionTime = TimeSpan.FromMilliseconds agentCallsExecutionMilliseconds
 
-    interface IAgentRunMiddleware with
+    interface IAgentMiddleware with
 
         member this.Run (messages:ChatMessage seq) (session:AgentSession|null) (options:AgentRunOptions|null) (agent:AIAgent) ct = task {
 

@@ -7,9 +7,10 @@
     <Compile Include="Helper.fs" />
     <Compile Include="Constants.fs" />
     <Compile Include="LlmModels.fs" />
-    <Compile Include="Agents\Middlewares.fs" />
-    <Compile Include="Agents\AgentCallTelemetryMiddleware.fs" />
-    <Compile Include="Agents\FunctionCallMiddleware.fs" />
+    <Compile Include="Middlewares\Middlewares.fs" />
+    <Compile Include="Middlewares\AgentTelemetryMiddleware.fs" />
+    <Compile Include="Middlewares\FunctionMiddleware.fs" />
+    <Compile Include="Middlewares\ChatClientMiddleware.fs" />
     <Compile Include="Tools\Models\TimeTools.fs" />
     <Compile Include="Tools\Models\OpenMeteo.models.fs" />
     <Compile Include="Tools\Models\Coingecko.models.fs" />

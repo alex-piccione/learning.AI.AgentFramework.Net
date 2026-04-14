@@ -20,8 +20,9 @@ type CryptocurrencyAgent private (agent:AIAgent, session) =
         krakenPrivateKey,
         coingeckoApiKey,
         wiseApiKey,
-        agentRunMiddlewares:IAgentRunMiddleware seq,
-        callFunctionMiddlewares: IFunctionCallMiddleware seq
+        agentMiddlewares:IAgentMiddleware seq,
+        functionMiddlewares:IFunctionMiddleware seq,
+        chatClientMiddlewares:IChatClientMiddleware seq
     ) = task {
 
         let krakenTools = KrakenTools(logger, krakenPublicKey, krakenPrivateKey).GetTools()
@@ -33,20 +34,25 @@ type CryptocurrencyAgent private (agent:AIAgent, session) =
         // select a settings
         let settings = Agents.Settings.Cryptocurrency.V3
 
+        let f = fun (state:ChatClientBuilder) (middleware:IChatClientMiddleware) -> state.Use(middleware.GetResponse, null)
+        let chatClient = 
+            (Seq.fold f (chatClient.AsBuilder()) chatClientMiddlewares) 
+                .Build()
+
         let agent:AIAgent = chatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
 
         let agentBuilder =
             agent.AsBuilder()
-            |> Seq.fold (fun (state:AIAgentBuilder) (middleware:IAgentRunMiddleware) -> state.Use(middleware.Run, null))
-            <| agentRunMiddlewares
+            |> Seq.fold (fun (state:AIAgentBuilder) (middleware:IAgentMiddleware) -> state.Use(middleware.Run, null))
+            <| agentMiddlewares
         
         let agentBuilder =
-            callFunctionMiddlewares 
-            |> Seq.fold (fun (state:AIAgentBuilder) (middleware:IFunctionCallMiddleware) ->
-                state.Use(callback=middleware.Next)
+            functionMiddlewares 
+            |> Seq.fold (fun (state:AIAgentBuilder) middleware -> state.Use(callback=middleware.Next)
             ) agentBuilder
 
         let agent = agentBuilder.Build()
+
 
         // add middleware
         //let agentBuilder = agent.AsBuilder()

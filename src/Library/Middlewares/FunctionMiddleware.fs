@@ -1,13 +1,13 @@
-﻿module FunctionCallMiddleware
+﻿namespace Middlewares
 
 open System
 open Microsoft.Extensions.Logging
 open Middlewares
 
 
-type FunctionCallMiddleware (logger:ILogger) =
+type FunctionMiddleware (logger:ILogger) =
 
-    interface IFunctionCallMiddleware with
+    interface IFunctionMiddleware with
         member _.NextAsFunc =
             Func<_, _, _, _, _>(fun agent context next ct ->
                     let result = next.Invoke(context, ct) 
