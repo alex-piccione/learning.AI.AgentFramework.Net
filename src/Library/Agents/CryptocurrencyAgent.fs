@@ -20,7 +20,8 @@ type CryptocurrencyAgent private (agent:AIAgent, session) =
         krakenPrivateKey,
         coingeckoApiKey,
         wiseApiKey,
-        middlewares:IAgentRunMiddleware seq
+        agentRunMiddlewares:IAgentRunMiddleware seq,
+        callFunctionMiddlewares: IFunctionCallMiddleware seq
     ) = task {
 
         let krakenTools = KrakenTools(logger, krakenPublicKey, krakenPrivateKey).GetTools()
@@ -36,8 +37,15 @@ type CryptocurrencyAgent private (agent:AIAgent, session) =
 
         let agentBuilder =
             agent.AsBuilder()
-            |> Seq.fold (fun (state:AIAgentBuilder) (middleware:IAgentRunMiddleware) -> state.Use(middleware.RunAsync, null))
-            <| middlewares 
+            |> Seq.fold (fun (state:AIAgentBuilder) (middleware:IAgentRunMiddleware) -> state.Use(middleware.Run, null))
+            <| agentRunMiddlewares
+        
+        let agentBuilder =
+            callFunctionMiddlewares 
+            |> Seq.fold (fun (state:AIAgentBuilder) (middleware:IFunctionCallMiddleware) ->
+                state.Use(callback=middleware.Next)
+            ) agentBuilder
+
         let agent = agentBuilder.Build()
 
         // add middleware

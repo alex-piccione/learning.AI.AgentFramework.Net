@@ -1,4 +1,5 @@
-﻿open System.Reflection
+﻿open System
+open System.Reflection
 open System.Threading
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Logging
@@ -9,9 +10,7 @@ open Agents.Wheater
 open Agents.Cryptocurrency
 open Agents.Expenses
 open Agents.Musicist
-open System
-open Microsoft.Extensions.DependencyInjection
-open Middleware.TokenUsageMiddleware
+
 open Middleware.AgentCallTelemetryMiddleware
 
 let ct = CancellationToken()
@@ -66,8 +65,9 @@ let chatClient, model =
     | Settings.AIService.Google -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
 
 // create Middlewares
-let tokenUsageMiddleware = TokenUsageMiddleware(logger, true)
 let agentCallTelemetryMiddleware = AgentCallTelemetryMiddleware(logger, LogType.Detailed)
+
+let functionCallMiddleware = FunctionCallMiddleware.FunctionCallMiddleware(logger)
 
 //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
 //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
@@ -84,7 +84,8 @@ let tasc = task {
             config.Get "Kraken:private key",
             config.Get "Coigecko:api key",
             config.Get "Wise:api key",
-            [agentCallTelemetryMiddleware]
+            [agentCallTelemetryMiddleware],
+            [functionCallMiddleware]
             )
 
         AnsiConsole.MarkupLine $"🤖 :robot: Agent [blue]CryptocurrencyAgent[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."

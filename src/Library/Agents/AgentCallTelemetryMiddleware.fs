@@ -29,7 +29,7 @@ type AgentCallTelemetryMiddleware (logger:ILogger, logType:LogType) =
 
     interface IAgentRunMiddleware with
 
-        member this.RunAsync (messages:ChatMessage seq) (session:AgentSession|null) (options:AgentRunOptions|null) (agent:AIAgent) ct = task {
+        member this.Run (messages:ChatMessage seq) (session:AgentSession|null) (options:AgentRunOptions|null) (agent:AIAgent) ct = task {
 
             let crono = System.Diagnostics.Stopwatch.StartNew()
 
