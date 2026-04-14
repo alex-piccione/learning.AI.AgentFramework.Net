@@ -3,12 +3,15 @@ open System.Threading
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Logging
 open Spectre.Console
+open Helper
 open OpenAIClientBuilder
 open Agents.Wheater
 open Agents.Cryptocurrency
 open Agents.Expenses
 open Agents.Musicist
-open Helper
+open System
+open Microsoft.Extensions.DependencyInjection
+open Middleware.TokenUsageMiddleware
 
 let ct = CancellationToken()
 
@@ -61,13 +64,16 @@ let chatClient, model =
     | Settings.AIService.Xiaomi -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Xiaomi, xiaomiApiKey, LlmModels.Xiaomi.Mimo_V2_Pro)
     | Settings.AIService.Google -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
 
+// create Middlewares
+let tokenUsageMiddleware = TokenUsageMiddleware(logger, true)
+
 //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
 //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
 //let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
 let question = "List my open orders on Kraken."
 AnsiConsole.MarkupLine($"[cyan]{question}[/]")
 
-task {
+let tasc = task {
     try
         let! cryptocurrencyAgent = CryptocurrencyAgent.Create(
             logger,
@@ -75,16 +81,19 @@ task {
             config.Get "Kraken:public key",
             config.Get "Kraken:private key",
             config.Get "Coigecko:api key",
-            config.Get "Wise:api key"
+            config.Get "Wise:api key",
+            [tokenUsageMiddleware]
             )
 
-        AnsiConsole.MarkupLine $"🤖 Agent [blue]CryptocurrencyAgent[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
+        AnsiConsole.MarkupLine $"🤖 :robot: Agent [blue]CryptocurrencyAgent[/] using model 🧠 [cyan]{model}[/] of [cyan]{Settings.service}[/]."
 
         let! response = cryptocurrencyAgent.Ask(question, ct)
 
-        match response.Usage with
-        | null -> ()
-        | usage -> renderUsage usage
+        AnsiConsole.MarkupLine($"Total used tokens: [yellow]{tokenUsageMiddleware.UsedTokens}[/]")
+
+        //match response.Usage with
+        //| null -> ()
+        //| usage -> renderUsage usage
 
         try
             do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())
@@ -96,7 +105,9 @@ task {
        AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
        AnsiConsole.WriteException(ex)
 }
-|> RunTask
+tasc.Spinner(Spinner.Known.Star) //|> Async.RunSynchronously
+//|> Async.Awa
+|> runTask
 
 
 
@@ -111,7 +122,7 @@ task {
     | usage -> renderUsage usage
 
     AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
-} |> RunTask
+} |> runTask
 *)
 
 (* test Google Lyria 3
@@ -134,7 +145,7 @@ task {
     | usage -> renderUsage usage
 
     AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
-} |> RunTask
+} |> runTask
 *)
 
 

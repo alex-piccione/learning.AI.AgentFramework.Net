@@ -19,7 +19,8 @@
     <Compile Include="Tools\OpenMeteoTools.fs" />
     <Compile Include="Tools\ExpensesTools.fs" />
     <Compile Include="Tools\MusicistTools.fs" />
-    <Compile Include="Agents\TokenConsumptionMiddleware.fs" />
+    <Compile Include="Agents\Middlewares.fs" />
+    <Compile Include="Agents\TokenUsageMiddleware.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />

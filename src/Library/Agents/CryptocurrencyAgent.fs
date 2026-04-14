@@ -8,6 +8,7 @@ open Tools.Coingecko
 open Tools.helper
 open Tools.Wise
 open Tools.Kraken
+open Middlewares
 
 type CryptocurrencyAgent private (agent:AIAgent, session) =
 
@@ -18,7 +19,9 @@ type CryptocurrencyAgent private (agent:AIAgent, session) =
         krakenPublicKey,
         krakenPrivateKey,
         coingeckoApiKey,
-        wiseApiKey) = task {
+        wiseApiKey,
+        middlewares:IAgentRunMiddleware seq
+    ) = task {
 
         let krakenTools = KrakenTools(logger, krakenPublicKey, krakenPrivateKey).GetTools()
         let coingeckoTools = CoingeckoTools(logger, coingeckoApiKey).GetTools()
@@ -31,8 +34,20 @@ type CryptocurrencyAgent private (agent:AIAgent, session) =
 
         let agent:AIAgent = chatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
 
+        let agentBuilder =
+            agent.AsBuilder()
+            |> Seq.fold (fun (state:AIAgentBuilder) (middleware:IAgentRunMiddleware) -> state.Use(middleware.RunAsync, null))
+            <| middlewares 
+        let agent = agentBuilder.Build()
+
         // add middleware
-        let agent = agent.AsBuilder().Use(TokenConsumptionMiddleware.run, null).Build()
+        //let agentBuilder = agent.AsBuilder()
+        //let agent =
+            //(middlewares |> Seq.fold (fun state middleware -> state.Use(middleware.RunAsync, null)) (agent.AsBuilder()) )
+          //  agent.AsBuilder()
+          //      .Use(tokenUsage.RunAsync, null)
+                //.UseLogging()
+          //      .Build()
 
         let! session = agent.CreateSessionAsync().AsTask()
 
