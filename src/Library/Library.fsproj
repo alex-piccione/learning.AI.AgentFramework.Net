@@ -9,6 +9,7 @@
     <Compile Include="LlmModels.fs" />
     <Compile Include="Middlewares\Middlewares.fs" />
     <Compile Include="Middlewares\AgentTelemetryMiddleware.fs" />
+    <Compile Include="Middlewares\AgentProhibitedWordsMiddleware.fs" />
     <Compile Include="Middlewares\FunctionMiddleware.fs" />
     <Compile Include="Middlewares\ChatClientMiddleware.fs" />
     <Compile Include="Tools\Models\TimeTools.fs" />
