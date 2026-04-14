@@ -53,16 +53,6 @@ type CryptocurrencyAgent private (agent:AIAgent, session) =
 
         let agent = agentBuilder.Build()
 
-
-        // add middleware
-        //let agentBuilder = agent.AsBuilder()
-        //let agent =
-            //(middlewares |> Seq.fold (fun state middleware -> state.Use(middleware.RunAsync, null)) (agent.AsBuilder()) )
-          //  agent.AsBuilder()
-          //      .Use(tokenUsage.RunAsync, null)
-                //.UseLogging()
-          //      .Build()
-
         let! session = agent.CreateSessionAsync().AsTask()
 
         return CryptocurrencyAgent(agent, session)

@@ -12,3 +12,14 @@ type ChatClientCallMiddleware(logger:ILogger) =
             logger.LogDebug($"FinishReason: {response.FinishReason}")
             return response
         }
+
+        (*
+        if (prohibitedWords.Contains (lastMessage.ToLower())) then
+            logger.LogCritical("Terminate due to use of prohibited word")
+            context.Terminate <- true
+            let responseMessage = ChatMessage(ChatRole.Assistant, $"I can't process requests about prohibited content.")
+            context.Messages.Add responseMessage
+            //return 
+            //context.result = AgentResponse()
+            task { return obj() } |> ValueTask<obj>
+            *)

@@ -74,7 +74,7 @@ let chatClientMiddleware = ChatClientCallMiddleware(logger)
 //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
 //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
 //let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
-let question = "List my open orders on Kraken. Mussolini."
+let question = "List my open orders on Kraken."
 //let question = "Who is Mussolini ?"  // test prohibited words
 AnsiConsole.MarkupLine($"[cyan]{question}[/]")
 
