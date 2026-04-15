@@ -9,7 +9,7 @@ type ChatClientCallMiddleware(logger:ILogger) =
     interface IChatClientMiddleware with
         member this.GetResponse messages options chatClient ct = task {
             let! response = chatClient.GetResponseAsync (messages, options, ct)
-            logger.LogDebug($"FinishReason: {response.FinishReason}")
+            logger.LogDebug($"Chat FinishReason: {response.FinishReason}")
             return response
         }
 

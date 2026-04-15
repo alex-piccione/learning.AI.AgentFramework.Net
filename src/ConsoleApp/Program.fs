@@ -14,7 +14,7 @@ let loggerFactory = LoggerFactory.Create(
     fun builder ->
         builder
             .AddConsole()
-            .SetMinimumLevel(LogLevel.Debug) // Set minimum log level
+            .SetMinimumLevel(LogLevel.Information) // Set minimum log level
         |> ignore
     )
 
@@ -92,12 +92,11 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
 
         // create Orchestrator Agent
         let! agent = OrchestratorAgent.Create(logger, agentBuilder, clientWrapper, ct)
-        let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
                 
         AnsiConsole.MarkupLine $"🤖 [blue]{agent.Name}[/] using 🧠 [cyan]{agent.LlmModel}[/] on [cyan]{agent.LlmProvider}[/].\n"
 
         AnsiConsole.WriteLine()
-        AnsiConsole.MarkupLine($"[yellow](👤 User question)[/]\n\n[cyan]{question}[/]")
+        AnsiConsole.MarkupLine($"[yellow](🙋 User question)[/]\n\n[cyan]{question}[/]")
         AnsiConsole.WriteLine()
 
         AnsiConsole.WriteLine("------------------------------------------------------------------------")

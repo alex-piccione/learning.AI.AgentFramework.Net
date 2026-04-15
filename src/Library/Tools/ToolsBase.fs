@@ -22,10 +22,10 @@ type ToolsBase (logger:ILogger) =
         )
 
     default this.LogCall method info =
-        if logger.IsEnabled LogLevel.Debug then
+        if logger.IsEnabled LogLevel.Information then
             match info with
-            | None      -> logger.LogInformation($"{this.GetType().Name} | Call to {method} | Start")
-            | Some info -> logger.LogInformation($"{this.GetType().Name} | Call to {method} | Start | {info}")
+            | None      -> logger.LogInformation($"🔨 {this.GetType().Name} | Call to {method} | Start")
+            | Some info -> logger.LogInformation($"🔨 {this.GetType().Name} | Call to {method} | Start | {info}")
 
     default this.LogError method ex =
         logger.LogError($"{this.GetType().Name} | Failed to call {method} | {ex}")
