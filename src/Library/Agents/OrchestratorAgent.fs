@@ -20,7 +20,7 @@ type OrchestratorTools (
         weatherAgent.Ask (question, ct)
 
     [<Description("Answer a question about cryptocurrencies.")>]
-    member __.AskCrypoto (question, ct) = 
+    member __.AskCrypto (question, ct) = 
         cryptoAgent.Ask (question, ct)
 
 

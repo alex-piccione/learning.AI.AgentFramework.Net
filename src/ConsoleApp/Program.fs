@@ -95,7 +95,12 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
         let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
                 
         AnsiConsole.MarkupLine $"🤖 [blue]{agent.Name}[/] using 🧠 [cyan]{agent.LlmModel}[/] on [cyan]{agent.LlmProvider}[/].\n"
-        AnsiConsole.MarkupLine($"User question:\n[cyan]{question}[/]")
+
+        AnsiConsole.WriteLine()
+        AnsiConsole.MarkupLine($"[yellow](👤 User question)[/]\n\n[cyan]{question}[/]")
+        AnsiConsole.WriteLine()
+
+        AnsiConsole.WriteLine("------------------------------------------------------------------------")
 
         let! response = agent.Ask(question, ct)
 
@@ -112,7 +117,8 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
         //| usage -> renderUsage usage
 
         AnsiConsole.WriteLine()
-        AnsiConsole.MarkupLine($"[yellow]Agent answer:[/]\n")
+        AnsiConsole.MarkupLine($"[yellow](🤖 Agent answer)[/]")
+        AnsiConsole.WriteLine()
 
         try
             do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())

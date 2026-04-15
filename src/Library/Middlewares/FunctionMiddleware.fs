@@ -15,6 +15,6 @@ type FunctionMiddleware (logger:ILogger) =
             )
 
         member _.Next agent context next ct = 
-            logger.LogDebug($"Call function: {context.Function.Name} Iteration:{context.Iteration}")
+            logger.LogDebug($"[🔨 Call function] {context.Function.Name} Iteration:{context.Iteration}")
             let result = next.Invoke(context, ct)
             result

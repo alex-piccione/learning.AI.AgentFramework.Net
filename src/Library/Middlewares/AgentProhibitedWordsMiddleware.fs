@@ -21,7 +21,7 @@ type AgentProhibitedWordsMiddleware(logger:ILogger) =
                 //response.FinishReason <- ChatFinishReason.Stop
 
                 // TODO: this raises an excepion... why?
-                System.Threading.Tasks.Task.FromResult response    
+                System.Threading.Tasks.Task.FromResult response
 
             else
                 agent.RunAsync(messages, session, options, ct)
