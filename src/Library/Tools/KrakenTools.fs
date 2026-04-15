@@ -1,4 +1,4 @@
-namespace Tools.Kraken
+namespace Tools
 
 open Microsoft.Extensions.Logging
 open System.ComponentModel

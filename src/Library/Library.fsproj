@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="ChatClient\ClientInfo.fs" />
     <Compile Include="Helper.fs" />
     <Compile Include="Constants.fs" />
     <Compile Include="LlmModels.fs" />
@@ -23,12 +24,16 @@
     <Compile Include="Tools\RandomTools.fs" />
     <Compile Include="Tools\OpenMeteoTools.fs" />
     <Compile Include="Tools\ExpensesTools.fs" />
-    <Compile Include="Tools\MusicistTools.fs" />
+    <Compile Include="Tools\GoogleLyriaTools.fs" />
+    <Compile Include="Tools\ToolsProvider.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
+    <Compile Include="Agents\IAgent.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />
     <Compile Include="Agents\ExpensesAgent.fs" />
     <Compile Include="Agents\MusicistAgent.fs" />
+    <Compile Include="Agents\AgentBuilder.fs" />
+    <Compile Include="Agents\OrchestratorAgent.fs" />
     <Compile Include="OpenAIClientBuilder.fs" />
   </ItemGroup>
 

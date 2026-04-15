@@ -1,14 +1,15 @@
-﻿namespace Agents.Musicist
+﻿namespace Agents
 
 open Microsoft.Extensions.Logging
 open Microsoft.Agents.AI
 open Microsoft.Extensions.AI
-open Tools.Musicist
+open Tools
 open Tools.helper
+open Helper
 
 type MusicistAgent (logger:ILogger, chatClient:IChatClient, googleApiKey, model) =
-    let musicistTools = MusicistTools(logger, googleApiKey, model) //|> Async.AwaitTask |> Async.RunSynchronously
-    let tools = asList [musicistTools.GetTools()]
+    let googleLyriaTools = GoogleLyriaTools(logger, googleApiKey)
+    let tools = asList [googleLyriaTools.GetTools()]
 
     let name = "Musicist"
     let description = "Agent for create music."
@@ -18,7 +19,7 @@ type MusicistAgent (logger:ILogger, chatClient:IChatClient, googleApiKey, model)
     """
 
     let agent = chatClient.AsAIAgent(instructions, name, description, tools)
-    let session = agent.CreateSessionAsync().AsTask() |> Async.AwaitTask |> Async.RunSynchronously
+    let session = agent.CreateSessionAsync().AsTask() |> runTask
 
     member _.Ask (question:string, ct) = task {
         let options:AgentRunOptions = AgentRunOptions()

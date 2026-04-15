@@ -1,17 +1,12 @@
 ﻿open System
-open System.Reflection
 open System.Threading
-open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Logging
 open Spectre.Console
 open Helper
 open OpenAIClientBuilder
-open Agents.Wheater
-open Agents.Cryptocurrency
-open Agents.Expenses
-open Agents.Musicist
-
 open Middlewares
+open Agents
+open Secrets
 
 let ct = CancellationToken()
 
@@ -25,36 +20,35 @@ let loggerFactory = LoggerFactory.Create(
 
 let logger = loggerFactory.CreateLogger("ConsoleApp")
 
-let config =
-    ConfigurationBuilder()
-        .AddUserSecrets(Assembly.GetExecutingAssembly()) // assembly is required to give the runtime the correct one where to find the UserSecretsId
-        //.AddAzureKeyVault(Uri("https://your-vault.vault.azure.net/"), DefaultAzureCredential())
-        .Build()
 
-let openAIKey = config.Get "OpenAI api key"
-let alibabaApiKey = config.Get "AliBaba api key"
-let alibabaPlanApiKey = config.Get "AliBaba Plan api key"
-let githubToken = config.Get "GitHub token"
-let mistralApiKey = config.Get "Mistral api key"
-let openrouterApiKey = config.Get "Openrouter api key"
-let xiaomiApiKey = config.Get "Xiaomi api key"
-let googleApiKey = config.Get "Google api key"
-let googleApiKeyForLyria = config.Get "Google api key for Lyria"
+let secrets:Tools.ThirdPartySecrets = {
+    krakenPublicKey = krakenPublicKey
+    krakenPrivateKey = krakenPrivateKey
+    coingeckoApiKey = coingeckoApiKey
+    wiseApiKey = wiseApiKey
+    googleApiKey = googleApiKey
+    googleLyriaApiKey = googleApiKeyForLyria
+}
 
-let wheatherAgent = WeatherAgent.CreateChatClientUsingOpenAI(logger, openAIKey, LlmModels.OpenAI.GPT_5_mini)
+let toolsProvider = Tools.ToolsProvider(logger, secrets)
 
-(*
-//let question = AnsiConsole.Ask<string>("[bold green]Ask the agent about the weather:[/]")
-//let question = "Dammi le coordinate geografiche di Pesaro"
-let question = "Come è il tempo a Pesaro?"
-AnsiConsole.MarkupLine($"[cyan]{question}[/]")
-let response = wheatherAgent.Ask(question, CancellationToken.None) |> Async.RunSynchronously
-AnsiConsole.MarkupLine($"[yellow]{response}[/]")
-*)
+// create Middlewares
+let agentTelemetryMiddleware = AgentTelemetryMiddleware(logger, LogType.None)
+let prohibitedWordsMiddleware = AgentProhibitedWordsMiddleware(logger)
 
-let chatClient, model =
+let functionMiddleware = FunctionMiddleware(logger)
+let chatClientMiddleware = ChatClientCallMiddleware(logger)
+
+let agentBuilder =
+    AgentBuilder(toolsProvider)
+        .AddAgentMiddleware(agentTelemetryMiddleware)
+        .AddAgentMiddleware(prohibitedWordsMiddleware)
+        .AddFunctionMiddleware(functionMiddleware)
+        .AddChatClientMiddleware(chatClientMiddleware)
+
+let chatClient, clientInfo =
     match Settings.service with
-    | Settings.AIService.OpenAI -> OpenAIClientBuilder.BuildOpenAIChatClient (openAIKey, LlmModels.OpenAI.GPT_5_2)
+    | Settings.AIService.OpenAI -> OpenAIClientBuilder.BuildOpenAIChatClient (openAIKey, LlmModels.OpenAI.GPT_5_2) 
     | Settings.AIService.LocalOllama -> OpenAIClientBuilder.BuildLocalOllamaChatClient Settings.OllamaModel
     | Settings.AIService.AliBaba -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, LlmModels.Alibaba.Qwen_3_5_plus)
     | Settings.AIService.AliBabaPlan -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBabaPlan, alibabaPlanApiKey, LlmModels.AlibabaPlan.Zhipu)
@@ -64,45 +58,61 @@ let chatClient, model =
     | Settings.AIService.Xiaomi -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Xiaomi, xiaomiApiKey, LlmModels.Xiaomi.Mimo_V2_Pro)
     | Settings.AIService.Google -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
 
-// create Middlewares
-let prohibitedWordsMiddleware = AgentProhibitedWordsMiddleware(logger)
-let agentTelemetryMiddleware = AgentTelemetryMiddleware(logger, LogType.Detailed)
+let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
 
-let functionMiddleware = FunctionMiddleware(logger)
-let chatClientMiddleware = ChatClientCallMiddleware(logger)
 
-//let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
-//let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
-//let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
-let question = "List my open orders on Kraken."
-//let question = "Who is Mussolini ?"  // test prohibited words
-AnsiConsole.MarkupLine($"[cyan]{question}[/]")
+// Test Agent //
 
-let tasc = task {
+(task {
     try
-        let! cryptocurrencyAgent = CryptocurrencyAgent.Create(
-            logger,
-            chatClient,
-            config.Get "Kraken:public key",
-            config.Get "Kraken:private key",
-            config.Get "Coigecko:api key",
-            config.Get "Wise:api key",
-            [prohibitedWordsMiddleware; agentTelemetryMiddleware],
-            [functionMiddleware],
-            [chatClientMiddleware]
-            )
+        //(* 
+        // Weather Agent //
+        let agent = agentBuilder.CreateWeatherAgent(clientWrapper)
 
-        AnsiConsole.MarkupLine $"Agent 🤖 [blue]CryptocurrencyAgent[/] using 🧠 [cyan]{model}[/] model on [cyan]{Settings.service}[/]."
+        //let question = AnsiConsole.Ask<string>("[bold green]Ask the agent about the weather:[/]")
+        //let question = "Dammi le coordinate geografiche di Pesaro"
+        let question = "Come è il tempo a Pesaro? Answer in English."
+        //*)
 
-        let! response = cryptocurrencyAgent.Ask(question, ct)
+        (*
+        // cryptocurrency //
+        let agent = agentBuilder.CreateCryptocurrencyAgent(clientWrapper)
 
-        AnsiConsole.MarkupLine($"Total Agent calls: [yellow]{agentTelemetryMiddleware.CallsCount}[/]")
-        AnsiConsole.MarkupLine($"Total used tokens: [yellow]{agentTelemetryMiddleware.UsedTokens}[/]")
-        AnsiConsole.MarkupLine($"Total elapsed time: [yellow]{agentTelemetryMiddleware.CallsExecutionTime}[/]")
+        //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
+        //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
+        //let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
+        let question = "List my open orders on Kraken."
+        *)
+
+        // test prohibited word
+        //let question = "Who is Mussolini ?"  // test prohibited words
+
+
+        // Agen call //
+
+        // create Orchestrator Agent
+        let! agent = OrchestratorAgent.Create(logger, agentBuilder, clientWrapper, ct)
+        let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
+                
+        AnsiConsole.MarkupLine $"🤖 [blue]{agent.Name}[/] using 🧠 [cyan]{agent.LlmModel}[/] on [cyan]{agent.LlmProvider}[/].\n"
+        AnsiConsole.MarkupLine($"User question:\n[cyan]{question}[/]")
+
+        let! response = agent.Ask(question, ct)
+
+        AnsiConsole.WriteLine()
+        AnsiConsole.WriteLine()
+        AnsiConsole.MarkupLine($"[gray]Total Agent calls:[/]  [white]{agentTelemetryMiddleware.CallsCount}[/]")
+        AnsiConsole.MarkupLine($"[gray]Total used tokens:[/]  [white]{agentTelemetryMiddleware.UsedTokens}[/]")
+        AnsiConsole.MarkupLine($"[gray]Total elapsed time:[/] [white]{agentTelemetryMiddleware.CallsExecutionTime}[/]")
+        AnsiConsole.WriteLine("------------------------------------------------------------------------")
+        AnsiConsole.WriteLine()
 
         //match response.Usage with
         //| null -> ()
         //| usage -> renderUsage usage
+
+        AnsiConsole.WriteLine()
+        AnsiConsole.MarkupLine($"[yellow]Agent answer:[/]\n")
 
         try
             do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())
@@ -113,9 +123,8 @@ let tasc = task {
     with ex ->
        AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
        AnsiConsole.WriteException(ex)
-}
-tasc.Spinner(Spinner.Known.BluePulse) //|> Async.RunSynchronously
-//|> Async.Awa
+
+}).Spinner(Spinner.Known.Aesthetic) 
 |> runTask
 
 
@@ -156,7 +165,6 @@ task {
     AnsiConsole.MarkupLine($"[cyan]{response.Text.EscapeMarkup()}[/]")
 } |> runTask
 *)
-
 
 loggerFactory.Dispose()
 

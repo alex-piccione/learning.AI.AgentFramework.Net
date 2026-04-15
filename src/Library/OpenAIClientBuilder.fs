@@ -3,6 +3,7 @@ module OpenAIClientBuilder
 open System
 open OpenAI
 open Microsoft.Extensions.AI
+open Clients
 
 type LLMProvider =
     | AliBaba
@@ -17,18 +18,18 @@ type LLMProvider =
 type OpenAIClientBuilder () =
 
     /// Create a OpenAI Chat Client
-    static member BuildOpenAIChatClient(apiKey:string, model:string):IChatClient * string =
+    static member BuildOpenAIChatClient(apiKey:string, model:string):IChatClient * ClientInfo =
         //OpenAI.Chat.ChatClient(model, apiKey).AsIChatClient(), model
-        OpenAIClient(apiKey).GetChatClient(model).AsIChatClient(), model
+        OpenAIClient(apiKey).GetChatClient(model).AsIChatClient(), ClientInfo(model, "OpenAI")
 
-    static member BuildLocalOllamaChatClient(model:string):IChatClient * string =
+    static member BuildLocalOllamaChatClient(model:string):IChatClient * ClientInfo =
         let credentials = ClientModel.ApiKeyCredential "not required"
         let options = OpenAI.OpenAIClientOptions()
         options.Endpoint <- Uri "http://localhost:11434/v1"
         //OpenAI.Chat.ChatClient(model, credentials, options).AsIChatClient(), model
-        OpenAIClient(credentials, options).GetChatClient(model).AsIChatClient(), model
+        OpenAIClient(credentials, options).GetChatClient(model).AsIChatClient(), ClientInfo(model, "Local Ollama")
 
-    static member BuildOpenAICompatibleChatClient(provider:LLMProvider, apiKey:string, model:string):IChatClient * string =
+    static member BuildOpenAICompatibleChatClient(provider:LLMProvider, apiKey:string, model:string):IChatClient * ClientInfo =
 
         let url = 
             match provider with
@@ -44,7 +45,7 @@ type OpenAIClientBuilder () =
         let options = OpenAI.OpenAIClientOptions()
         options.Endpoint <- Uri url
         //OpenAI.Chat.ChatClient(model, credentials, options).AsIChatClient(), model
-        OpenAIClient(credentials, options).GetChatClient(model).AsIChatClient(), model
+        OpenAIClient(credentials, options).GetChatClient(model).AsIChatClient(), ClientInfo(model, provider.ToString())
 
 
     (* Another way to create a OpenAI compatible ChatClient

@@ -1,4 +1,4 @@
-namespace Tools.OpenMeteo
+namespace Tools
 
 open System.Threading.Tasks
 open System.ComponentModel

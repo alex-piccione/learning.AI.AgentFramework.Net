@@ -6,13 +6,13 @@ open Microsoft.Extensions.AI
 open Microsoft.Extensions.Logging
 
 type ToolsBase (logger:ILogger) =
-    abstract GetTools: unit -> AITool seq // System.Collections.Generic.IList<AITool>
+    abstract GetTools: unit -> AITool array // compatible with System.Collections.Generic.IList<AITool>
     abstract LogCall: string -> string option -> unit
     abstract LogError: string -> exn -> unit
 
     default this.GetTools() =
         this.GetType().GetMethods(BindingFlags.Public ||| BindingFlags.Instance)
-        |> Seq.choose (fun m ->
+        |> Array.choose (fun m ->
             // Only pick methods that have a Description attribute
             let attr = m.GetCustomAttribute<DescriptionAttribute>()
             if isNull attr then None
@@ -30,10 +30,9 @@ type ToolsBase (logger:ILogger) =
     default this.LogError method ex =
         logger.LogError($"{this.GetType().Name} | Failed to call {method} | {ex}")
 
-
 module helper =
 
     /// Convert a sequence of AITool sequence to a List that is required for the Agent contructor
-    let asList (tools:AITool seq seq) =
+    let asList (tools:AITool array seq) =
         let finalSeq = tools |> Seq.fold (fun state tools -> Seq.append state tools) Seq.empty<AITool>
         System.Collections.Generic.List<AITool>(finalSeq)

@@ -1,4 +1,4 @@
-﻿namespace Agents.Expenses
+﻿namespace Agents
 
 open Microsoft.Extensions.AI
 open Microsoft.Extensions.Logging

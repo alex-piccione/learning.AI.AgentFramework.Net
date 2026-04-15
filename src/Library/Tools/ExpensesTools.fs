@@ -25,4 +25,4 @@ type ExpensesTools private (logger, mcpTools:seq<McpClientTool>) =
     } 
 
     override this.GetTools() = 
-        mcpTools |> Seq.map (fun t -> t :> AITool)
+        mcpTools |> Seq.map (fun t -> t :> AITool) |> Array.ofSeq

@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Include="Settings.fs" />
     <Compile Include="Helper.fs" />
+    <Compile Include="Secrets.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

@@ -67,3 +67,6 @@ module LlmModels
         let Gemini_3_1_Flash_Lite_preview = "gemini-3.1-flash-lite-preview"
         let Gemini_2_5_Pro = "gemini-2.5-pro"
         let Gemma_4_26B = "gemma-4-26b-a4b-it"
+
+        module public Lyria =
+            let Lyria_3_Clip_preview = "lyria-3-clip-preview"

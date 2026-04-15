@@ -51,7 +51,7 @@ type AgentTelemetryMiddleware (logger:ILogger, logType:LogType) =
                 | None -> ()
                 | Simple -> 
                     logger.LogDebug($"Agent call used tokens: {usedTokens}. Total used tokens: {tokens}.")
-                    logger.LogDebug($"Agent call execution time: {elapsedMiliseconds}ms. Total execution time: {this.CallsExecutionTime}.")
+                    logger.LogDebug($"Agent call execution time: {elapsedMiliseconds/1000L}s. Total execution time: {this.CallsExecutionTime}.")
                 | _ -> 
                     let number (nullable:Nullable<int64>) =
                         match nullable.HasValue with

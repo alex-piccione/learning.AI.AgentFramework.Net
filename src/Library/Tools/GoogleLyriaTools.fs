@@ -1,4 +1,4 @@
-﻿namespace Tools.Musicist
+﻿namespace Tools
 
 open System
 open System.IO
@@ -9,36 +9,37 @@ open Google.GenAI.Types
 open Tools
 open System.ComponentModel
 
-type MusicistTools (logger, googleApiKey:string, model) =
+type GoogleLyriaTools (logger, googleLyriaApiKey:string) =
     inherit ToolsBase(logger)
 
     [<Description("Create a song with the provided description and given length.")>]
     member this.GenerateMusicClip (
         [<Description("Style, mood, some indication about the story or argument.")>]
-        text:string, 
+        instructions:string, 
         [<Description("Lenght of the song, in seconds")>]
         lenghtInSeconds:int, 
+        [<Description("The LLM model to use.")>]
+        llmModel:string,
         [<Description("Where to save the generated MP3. The file path.")>]
         outputFile:string, ct) = task {
 
         this.LogCall "GenerateMusicClip" None
 
         try 
-
             match Path.GetDirectoryName outputFile with
             | null -> failwith $"Directory of {outputFile} is empty"
             | directory -> 
                 if Directory.Exists outputFile = false then
                     Directory.CreateDirectory directory |> ignore
 
-            let client = new Client(apiKey=googleApiKey)
+            let client = new Client(apiKey=googleLyriaApiKey)
 
             let config = GenerateContentConfig()
             //config. ResponseMimeType = "audio/wav"  // default is mp3 ?
 
             let! response = client.Models.GenerateContentAsync(
-              model = model,
-              contents =  $"{text} It has to be {lenghtInSeconds} seconds lenght maximum."
+              model = llmModel,
+              contents =  $"{instructions} It has to be {lenghtInSeconds} seconds lenght maximum."
             )
 
             (*

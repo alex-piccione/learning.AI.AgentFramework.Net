@@ -1,4 +1,4 @@
-namespace Tools.Coingecko
+namespace Tools
 
 open System.ComponentModel
 open System.Threading.Tasks

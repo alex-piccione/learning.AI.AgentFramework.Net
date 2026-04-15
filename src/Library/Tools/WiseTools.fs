@@ -1,4 +1,4 @@
-namespace Tools.Wise
+namespace Tools
 
 open Microsoft.Extensions.Logging
 open System.Threading.Tasks

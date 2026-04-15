@@ -1,33 +1,35 @@
-﻿namespace Agents.Wheater
+﻿namespace Agents
 
 open System.Threading
-open Microsoft.Extensions.Logging
 open Microsoft.Agents.AI
 open Microsoft.Extensions.AI
-open Tools.OpenMeteo
 open Tools
+open Helper
+open Clients
 
-type WeatherAgent (agent: AIAgent) =
+type WeatherAgent (name, client:ClientWrapper, toolsProvider:ToolsProvider) =
+    //inherit AgentBase(name, client)
 
-    let session = agent.CreateSessionAsync().AsTask() |> Async.AwaitTask |> Async.RunSynchronously
+    let instructions = """
+        You are an expert metereologist.
+    """
 
-    static member CreateChatClientUsingOpenAI(logger:ILogger, apiKey:string, model:string) =
+    let tools = toolsProvider.OpenMeteoTools
+    let agent = client.ChatClient.AsAIAgent(instructions, name, "Retrieve info about the weather.", tools)
+    let session = agent.CreateSessionAsync().AsTask() |> runTask
 
-        let instructions = """
-            You are an expert metereologist.
-        """
-        // "You are an information agent. Answer questions cheerfully."
-
-        let tools = [OpenMeteoTools(logger).GetTools()] |> helper.asList
-
-        let client = OpenAI.OpenAIClient(apiKey)
-        let chatClient = client.GetChatClient(model)
-        let agent = chatClient.AsIChatClient().AsAIAgent(instructions, "Weather Tool", "Retrieve info about the weather", tools)
-        WeatherAgent(agent)
-
-    member _.Ask (question:string, ct:CancellationToken) = async {
+    member _.Ask (question:string, ct:CancellationToken) = task {
         let options:AgentRunOptions = AgentRunOptions()
-        let! response = agent.RunAsync(question, session, options, ct) |> Async.AwaitTask
-
-        return response.ToString()
+        return! agent.RunAsync(question, session, options, ct)
     }
+
+    interface IAgent with
+        member _.Name = name
+        member this.LlmModel = client.Info.LlmModel
+        member this.LlmProvider = client.Info.LlmProvider
+
+    interface IChatAgent with
+        member _.Ask(question, ct) = task {
+            let options:AgentRunOptions = AgentRunOptions()
+            return! agent.RunAsync(question, session, options, ct)
+        }
