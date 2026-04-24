@@ -12,18 +12,18 @@ type WiseTools (logger:ILogger, apiKey) =
 
     let client = WiseApiClient(apiKey)
 
-    [<Description("Retrieve the exchange rate (fiat over fiat) from Wise API")>]
+    [<Description("Retrieve the exchange rate. Returns how many units of 'quote' are needed for 1 unit of 'base'.")>]
     member this.GetExchangeRate (
-        [<Description("The Main currency in the main/quote pair.")>]
-        main:string, 
-        [<Description("The Quote currency in the main/quote pair.")>]
-        quote:string): Task<decimal> = task {
+        [<Description("The Base currency (the '1' in the pair, e.g., GBP in GBP/EUR)")>]
+        baseCurrency:string, 
+        [<Description("The Quote currency (the target value, e.g., EUR in GBP/EUR)")>]
+        quoteCurrency:string): Task<decimal> = task {
 
-        let pair = CurrencyPair(main, quote)
-        this.LogCall "GetExchangeRate" (Some $"{main}/{quote}")
+        let pair = CurrencyPair(baseCurrency, quoteCurrency)
+        this.LogCall "GetExchangeRate" (Some $"{baseCurrency}/{quoteCurrency}")
         try 
             let! rate = client.GetExchangeRate(pair)
-            logger.LogDebug($"{main}/{quote} = {rate}")
+            logger.LogDebug($"{baseCurrency}/{quoteCurrency} = {rate}")
             return rate
         with ex -> 
             this.LogError "GetExchangeRate" ex

@@ -19,7 +19,7 @@ type OrchestratorTools (
     member __.AskWeather (question, ct) = 
         weatherAgent.Ask (question, ct)
 
-    [<Description("Answer a question about cryptocurrencies.")>]
+    [<Description("Answer a question about cryptocurrencies. It has the tools to access realtime exchanges rates, Kraken, Wise and other financial stuff.")>]
     member __.AskCrypto (question, ct) = 
         cryptoAgent.Ask (question, ct)
 
@@ -35,6 +35,9 @@ type OrchestratorAgent private (agent:AIAgent, clientWrapper) =
             Instructions = """
                 You are a chereful agent.
                 You use your tool to answer user questions.
+                For questions about currency exchange rates, Kraken exchange and financial info, use the AskCrypto tool.
+
+                If you think you don't have the tool for the task, list your tools to the user in JSON.
             """
         }
 

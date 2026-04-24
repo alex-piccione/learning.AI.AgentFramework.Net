@@ -21,12 +21,22 @@ type Ticker with
 type OpenOrder = {
     [<Description("When the order was created")>]
     CreatedOn: DateTime
+
     [<Description("Main currency")>]
     MainCurrency: string
+    
     [<Description("Quote currency")>]
     QuoteCurrency: string
-    [<Description("Quantity of main currency")>]
+
+    [<Description("Quantity of main currency")>]    
     Quantity: decimal
+
+    [<Description("Order Type, e.g. Market, Limit, etc...")>]
+    OrderType: string
+    
+    [<Description("Limit price. Value is zero if is a order type that does not support a limit price.")>]
+    LimitPrice: decimal
+
     [<Description("Side of the order (Buy or Sell)")>]
     Side: string
 }
@@ -38,6 +48,8 @@ type OpenOrder with
             MainCurrency = order.Pair.Main.UpperCase
             QuoteCurrency = order.Pair.Quote.UpperCase
             Quantity = order.BuyOrSellQuantity
+            OrderType = order.Type.ToString()
+            LimitPrice = order.LimitPrice
             Side =
                 match order.Side with
                 | Alex75.Cryptocurrencies.OrderSide.Buy -> "Buy"
