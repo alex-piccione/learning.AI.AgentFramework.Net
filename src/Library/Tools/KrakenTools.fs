@@ -39,11 +39,11 @@ type KrakenTools (logger:ILogger, krakenPublicKey, kakenSecretKey) =
     }
 
     [<Description("Retrieve the open orders in the Kraken exchange")>]
-    member this.GetOpenOrders (): Task<OpenOrder array> = task {
+    member this.GetOpenOrders (): Task<OpenOrder list> = task {
         this.LogCall "GetOpenOrders" None
         try 
             let! orders = client.ListOpenOrders()
-            return Array.map (fun o -> OpenOrder.FromApiOpenOrder o) <| orders
+            return List.map (fun o -> OpenOrder.FromApiOpenOrder o) <| orders
 
         with ex -> 
             this.LogError "GetTicker" ex

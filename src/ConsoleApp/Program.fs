@@ -65,24 +65,24 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
 
 (task {
     try
-        //(* 
+        (* 
         // Weather Agent //
         let agent = agentBuilder.CreateWeatherAgent(clientWrapper)
 
         //let question = AnsiConsole.Ask<string>("[bold green]Ask the agent about the weather:[/]")
         //let question = "Dammi le coordinate geografiche di Pesaro"
-        let question = "Come è il tempo a Pesaro? Answer in English."
-        //*)
+        let question = "Come è il tempo a Pesaro? Answer in Spanish."
+        *)
 
-        (*
+        //(*
         // cryptocurrency //
-        let agent = agentBuilder.CreateCryptocurrencyAgent(clientWrapper)
+        //let agent = agentBuilder.CreateCryptocurrencyAgent(clientWrapper)
 
         //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
         //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
         //let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
         let question = "List my open orders on Kraken."
-        *)
+        //*)
 
         // test prohibited word
         //let question = "Who is Mussolini ?"  // test prohibited words
@@ -122,7 +122,7 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
         try
             do! ConsoleMarkdownRenderer.Displayer.DisplayMarkdownAsync(response.Text.EscapeMarkup())
         with ex ->
-            //logger.LogWarning "Failed to use DisplayMarkdownAsync"
+            logger.LogWarning "Failed to use DisplayMarkdownAsync"
             logger.LogInformation response.Text
 
     with ex ->

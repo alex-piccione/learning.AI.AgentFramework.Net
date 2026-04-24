@@ -11,7 +11,7 @@ type AIService =
     | Xiaomi
     | Google
 
-let service = AIService.LocalOllama
+let service = AIService.AliBaba
 
 let OllamaModel
     //= "dolphin3:8b"              // ❌ Does not support tools

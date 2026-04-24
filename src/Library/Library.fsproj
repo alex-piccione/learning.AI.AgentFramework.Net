@@ -38,7 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alex75.Cryptocurrencies" />
     <PackageReference Include="Alex75.KrakenApiClient" />
     <PackageReference Include="FSharp.Core" />
     <PackageReference Include="FsHttp" />
@@ -49,6 +48,7 @@
     <PackageReference Include="Microsoft.Agents.AI.Workflows" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="ModelContextProtocol" />
+    <PackageReference Include="OpenTelemetry.Api" />
   </ItemGroup>
 
 </Project>
