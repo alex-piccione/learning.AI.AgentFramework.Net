@@ -8,6 +8,7 @@ module LlmModels
     module public Alibaba =
         let Qwen_3_6_plus = "qwen3.6-plus"
         let Qwen_3_5_plus = "qwen3.5-plus"
+        let Qwen_3_5_plus_2026_02_15 = "qwen3.5-plus-2026-02-15"
         //let Qwen3_max_2026_01_23 = "qwen3-max-2026-01-23"
         //let Qwen_Coder_Next = "qwen3-coder-next"
         //let Qwen_Coder_Plus = "qwen3-coder-plus"

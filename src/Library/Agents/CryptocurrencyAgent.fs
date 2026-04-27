@@ -6,16 +6,16 @@ open Microsoft.Extensions.AI
 open Tools
 open Clients
 
-type CryptocurrencyAgent private (agent:AIAgent, client) =
-    inherit ChatAgentBase(agent, client)
+type CryptocurrencyAgent private (agent:AIAgent, clientWrapper) =
+    inherit ChatAgentBase(agent, clientWrapper)
 
-    new(client:ClientWrapper, toolsProvider:ToolsProvider) =
+    new(clientWrapper:ClientWrapper, toolsProvider:ToolsProvider) =
         let settings = Agents.Settings.Cryptocurrency.V3
         let tools = Array.concat [
             toolsProvider.CoingeckoTools
             toolsProvider.KrakenTools
             toolsProvider.WiseTools // for exchange rates with Fiat
         ]
-        let agent:AIAgent = client.ChatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
+        let agent:AIAgent = clientWrapper.ChatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
 
-        CryptocurrencyAgent(agent, client)
+        CryptocurrencyAgent(agent, clientWrapper)

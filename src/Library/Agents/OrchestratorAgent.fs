@@ -11,7 +11,8 @@ open Clients
 type OrchestratorTools (
     logger, 
     weatherAgent:IChatAgent, 
-    cryptoAgent:IChatAgent) 
+    cryptoAgent:IChatAgent,
+    ?filesAgent: FilesManagerAgent)
     = 
     inherit ToolsBase(logger)
 
@@ -24,10 +25,17 @@ type OrchestratorTools (
         cryptoAgent.Ask (question, ct)
 
 
+    [<Description("Files and Directories tool. It has the tools to access files and directories of the provided root folder.")>]
+    member _.AskFiles(question, ct) =
+        match filesAgent with
+        | Some agent -> (agent :> IChatAgent).Ask(question, ct)
+        | None -> invalidOp "Files tool is not configured."
+
+
 type OrchestratorAgent private (agent:AIAgent, clientWrapper) =
     inherit ChatAgentBase(agent, clientWrapper)
 
-    static member Create (logger, agentBuilder:AgentBuilder, client:ClientWrapper, ct): Task<IChatAgent> = task {
+    static member Create (logger, agentBuilder:AgentBuilder, clientWrapper:ClientWrapper, rootFolder:string option, ?ct): Task<IChatAgent> = task {
 
         let agentSettings:AgentSettings = {
             Name = "Orchestrator"
@@ -41,14 +49,31 @@ type OrchestratorAgent private (agent:AIAgent, clientWrapper) =
             """
         }
 
+        let fileAgentOpt =
+            match rootFolder with 
+            | None -> None
+            | Some folder -> Some(agentBuilder.CreateFilesManagerAgent(logger, clientWrapper, folder))
+
         let tools = 
             OrchestratorTools(
-            logger,
-            agentBuilder.CreateWeatherAgent(client),
-            agentBuilder.CreateCryptocurrencyAgent(client) 
-                ).GetTools()
+                logger,
+                agentBuilder.CreateWeatherAgent(clientWrapper),
+                agentBuilder.CreateCryptocurrencyAgent(clientWrapper),
+                ?filesAgent=fileAgentOpt
+            ).GetTools()
 
-        let! agent = agentBuilder.CreateAgent(agentSettings, client, tools)
+        let! agent = agentBuilder.CreateAgent(agentSettings, clientWrapper, tools)
 
-        return OrchestratorAgent (agent, client) :> IChatAgent
+        return OrchestratorAgent (agent, clientWrapper) :> IChatAgent
     }
+
+    // TODO: implement a Builder strategy
+    //member _.AddFileManager(rootFolder) =
+    //    let fileManager = FileManagerAgent(logger, clientWrapper, rootFolder)
+    //    let file_Tools = fileManager.
+
+    //    let new_tools = tools;
+
+    //    let! agent = agentBuilder.CreateAgent(agentSettings, client, tools)
+
+    ///    return OrchestratorAgent (agent, client, logger) :> IChatAgent

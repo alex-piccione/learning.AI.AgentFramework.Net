@@ -30,11 +30,15 @@ type AgentBuilder(toolsProvider:ToolsProvider) =
         chatClientMiddlewares <- middleware::chatClientMiddlewares
         this
 
+
+    member _.CreateFilesManagerAgent(logger, clientWrapper, rootFolder) =
+        FilesManagerAgent(logger, clientWrapper, rootFolder)
+
     member _.CreateWeatherAgent(chatClient) =
         WeatherAgent("Weather Agent", chatClient, toolsProvider)
 
-    member _.CreateCryptocurrencyAgent(chatClient) =
-        CryptocurrencyAgent(chatClient, toolsProvider)
+    member _.CreateCryptocurrencyAgent(clientWrapper) =
+        CryptocurrencyAgent(clientWrapper, toolsProvider)
 
     member _.CreateAgent(settings:AgentSettings, client:ClientWrapper, tools) = task {
 

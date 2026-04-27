@@ -14,7 +14,7 @@ let loggerFactory = LoggerFactory.Create(
     fun builder ->
         builder
             .AddConsole()
-            .SetMinimumLevel(LogLevel.Information) // Set minimum log level
+            .SetMinimumLevel(LogLevel.Debug) // Set minimum log level
         |> ignore
     )
 
@@ -33,7 +33,7 @@ let secrets:Tools.ThirdPartySecrets = {
 let toolsProvider = Tools.ToolsProvider(logger, secrets)
 
 // create Middlewares
-let agentTelemetryMiddleware = AgentTelemetryMiddleware(logger, LogType.None)
+let agentTelemetryMiddleware = AgentTelemetryMiddleware(logger, LogType.Simple)
 let prohibitedWordsMiddleware = AgentProhibitedWordsMiddleware(logger)
 
 let functionMiddleware = FunctionMiddleware(logger)
@@ -50,7 +50,7 @@ let chatClient, clientInfo =
     match Settings.service with
     | Settings.AIService.OpenAI -> OpenAIClientBuilder.BuildOpenAIChatClient (openAIKey, LlmModels.OpenAI.GPT_5_2) 
     | Settings.AIService.LocalOllama -> OpenAIClientBuilder.BuildLocalOllamaChatClient Settings.OllamaModel
-    | Settings.AIService.AliBaba -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, LlmModels.Alibaba.Qwen_3_5_plus)
+    | Settings.AIService.AliBaba -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, LlmModels.Alibaba.Qwen_3_5_plus_2026_02_15)
     | Settings.AIService.AliBabaPlan -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBabaPlan, alibabaPlanApiKey, LlmModels.AlibabaPlan.Zhipu)
     | Settings.AIService.GitHub -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.GitHub, githubToken, LlmModels.GitHub.Phi_4_mini_instruct)
     | Settings.AIService.Mistral -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Mistral, mistralApiKey, LlmModels.Mistral.MINISTRAL_14b_2512)
@@ -81,18 +81,21 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
         //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
         //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
         //let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
-        let question = "List my open orders on Kraken."
+        //let question = "List my open orders on Kraken."
         //*)
 
         // test prohibited word
         //let question = "Who is Mussolini ?"  // test prohibited words
 
 
-        // Agen call //
-        let question = "Quanti EUR sono 60 GBP? Quanti GBP ci vogliono per 200 EUR ?"
+        // Agent call //
+        //let question = "Quanti EUR sono 60 GBP? Quanti GBP ci vogliono per 200 EUR ?"
+        let torrentDir = "T:\Torrent\Completed"
+        let question = $"Can you see the files in {torrentDir} (or its subfolders)? There are .mp3 files?"
 
         // create Orchestrator Agent
-        let! agent = OrchestratorAgent.Create(logger, agentBuilder, clientWrapper, ct)
+        //let filesManager = agentBuilder.CreateFilesManagerAgent(logger, clientWrapper, torrentDir)
+        let! agent = OrchestratorAgent.Create(logger, agentBuilder, clientWrapper, Some torrentDir, ct)
                 
         AnsiConsole.MarkupLine $"🤖 [blue]{agent.Name}[/] using 🧠 [cyan]{agent.LlmModel}[/] on [cyan]{agent.LlmProvider}[/].\n"
 
