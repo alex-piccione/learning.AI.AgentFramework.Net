@@ -6,6 +6,11 @@
   <ItemGroup>
     <Compile Include="data\resource helper.fs" />
     <EmbeddedResource Include="data\openmeteo forecast.response.json" />
+    <Compile Include="tools\RootFolderTestBase.fs" />
+    <Compile Include="tools\DirectoryExplorer\ReadFile.fs" />
+    <Compile Include="tools\DirectoryExplorer\ListFiles.fs" />
+    <Compile Include="tools\DirectoryExplorer\GetTree.fs" />
+    <Compile Include="tools\FileManager\WriteFile.test.fs" />
     <Compile Include="tools\OpenMeteo.test.fs" />
   </ItemGroup>
 
@@ -16,6 +21,7 @@
     </PackageReference>
     <PackageReference Include="Foq" />
     <PackageReference Include="FSharp.Core" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit.Analyzers">

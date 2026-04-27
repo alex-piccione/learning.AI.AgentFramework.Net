@@ -1,4 +1,4 @@
-module UnitTests.Tools.Models.OpenMeteo
+module UnitTests.Tools.OpenMeteo
 
 open NUnit.Framework
 open Swensen.Unquote

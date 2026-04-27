@@ -89,6 +89,7 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
 
 
         // Agen call //
+        let question = "Quanti EUR sono 60 GBP? Quanti GBP ci vogliono per 200 EUR ?"
 
         // create Orchestrator Agent
         let! agent = OrchestratorAgent.Create(logger, agentBuilder, clientWrapper, ct)

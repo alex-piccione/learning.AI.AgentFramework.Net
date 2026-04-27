@@ -1,0 +1,51 @@
+﻿namespace UnitTests.Tools.DirectoryExplorer
+
+open System
+open System.IO
+open NUnit.Framework
+open Swensen.Unquote
+
+open RootFolderTestBase
+
+type ReadFile () =
+    inherit PathValidationTestBase()
+
+    let mutable helper = Helper("")
+
+    override this.GetOperation () =
+        let tools = base.DirectoryExplorerTools
+        fun path -> tools.ReadFile(path) |> ignore
+
+    [<SetUp>]
+    member _.SetupAdditional() =
+        helper <- Helper(base.TestDir)
+
+    // ========== Specific ReadFile tests ==========
+
+    [<Test>]
+    member _.``ReadFile in root`` () =
+        let file = "aaa.txt"
+        let expectedContent = "This is the content of the file."
+        helper.CreateFile(file, expectedContent)
+
+        // Execute
+        let content = base.DirectoryExplorerTools.ReadFile(file)
+
+        test <@ content = expectedContent @>
+
+    [<Test>]
+    member _.``ReadFile in subdirectory`` () =
+        let file = "aaa/bbb.txt"
+        let expectedContent = "This is the content of the file."
+        helper.CreateFile(file, expectedContent)
+
+        // Execute
+        let content = base.DirectoryExplorerTools.ReadFile(file)
+
+        test <@ content = expectedContent @>
+
+    [<Test>]
+    member _.``ReadFile when file does not exist`` () =
+        raisesWith<FileNotFoundException>
+            <@ base.DirectoryExplorerTools.ReadFile("not_exist.txt") @>
+            (fun ex -> <@ ex.Message = "File 'not_exist.txt' does not exist." @>)

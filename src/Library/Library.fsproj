@@ -18,6 +18,9 @@
     <Compile Include="Tools\Models\Coingecko.models.fs" />
     <Compile Include="Tools\Models\Kraken.models.fs" />
     <Compile Include="Tools\ToolsBase.fs" />
+    <Compile Include="Tools\RootFolderToolsBase.fs" />
+    <Compile Include="Tools\DirectoryExplorerTools.fs" />
+    <Compile Include="Tools\FileManagerTools.fs" />
     <Compile Include="Tools\WiseTools.fs" />
     <Compile Include="Tools\KrakenTools.fs" />
     <Compile Include="Tools\CoigeckoTools.fs" />
