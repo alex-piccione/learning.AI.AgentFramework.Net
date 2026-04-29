@@ -12,7 +12,7 @@ type OrchestratorTools (
     logger, 
     weatherAgent:IChatAgent, 
     cryptoAgent:IChatAgent,
-    ?filesAgent: FilesManagerAgent)
+    ?filesAgent: FilesManagerAgent_v2)
     = 
     inherit ToolsBase(logger)
 
@@ -35,9 +35,9 @@ type OrchestratorTools (
 type OrchestratorAgent private (agent:AIAgent, clientWrapper) =
     inherit ChatAgentBase(agent, clientWrapper)
 
-    static member Create (logger, agentBuilder:AgentBuilder, clientWrapper:ClientWrapper, rootFolder:string option, ?ct): Task<IChatAgent> = task {
+    static member Create (logger, aiagentBuilder:AIAgentHelper, agentBuilder:AgentBuilder, clientWrapper:ClientWrapper, rootFolder:string option, ?ct): Task<IChatAgent> = task {
 
-        let agentSettings:AgentSettings = {
+        let agentDefinition:AgentDefinition = {
             Name = "Orchestrator"
             Description = "Manages user request and sub-agents."
             Instructions = """
@@ -49,10 +49,13 @@ type OrchestratorAgent private (agent:AIAgent, clientWrapper) =
             """
         }
 
-        let fileAgentOpt =
+        let! fileAgentOpt = task {
             match rootFolder with 
-            | None -> None
-            | Some folder -> Some(agentBuilder.CreateFilesManagerAgent(logger, clientWrapper, folder))
+            | None -> return None
+            | Some folder -> 
+                let! agent = agentBuilder.CreateFilesManagerAgent(logger, clientWrapper, folder)
+                return Some agent
+        }
 
         let tools = 
             OrchestratorTools(
@@ -62,7 +65,7 @@ type OrchestratorAgent private (agent:AIAgent, clientWrapper) =
                 ?filesAgent=fileAgentOpt
             ).GetTools()
 
-        let! agent = agentBuilder.CreateAgent(agentSettings, clientWrapper, tools)
+        let! agent = aiagentBuilder.Create(agentDefinition, clientWrapper.ChatClient, tools)
 
         return OrchestratorAgent (agent, clientWrapper) :> IChatAgent
     }

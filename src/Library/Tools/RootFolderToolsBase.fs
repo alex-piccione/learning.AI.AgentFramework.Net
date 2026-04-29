@@ -26,7 +26,50 @@ type RootFolderToolsBase(logger, rootFolder:string) =
         if not (Directory.Exists rootFolder) then
             failwith $"Directory \"{rootFolder}\" does not exist."
 
+    member __.GetRelativePath (path: string) =
+
+        if String.IsNullOrWhiteSpace(path) then
+            raise (ArgumentException("Path cannot be empty or whitespace."))
+
+        if not (path.StartsWith(rootFolder)) then
+            raise (ArgumentException($"Path '{path}' is not allowed, it MUST be in the root folder '{rootFolder}'."))
+
+        // Reject URL-encoded characters (e.g. %2e%2e → ..)
+        if path.Contains("%") then
+            raise (UnauthorizedAccessException($"Path '{path}' contains URL-encoded characters and is not allowed."))
+
+        // Check for path traversal
+        if path.Contains("..") then
+            raise (UnauthorizedAccessException($"Path '{path}' is not allowed."))
+
+        if path.Contains("\0") then // null byte
+            raise (UnauthorizedAccessException($"Path '{path}' contains a null byte."))
+
+        path.Replace(rootFolder, "")
+
+
+    member __.ValidatePath_v2 (path: string) =
+
+        if String.IsNullOrWhiteSpace(path) then
+            raise (ArgumentException("Path cannot be empty or whitespace."))
+
+        if not (path.StartsWith(rootFolder)) then
+            raise (ArgumentException($"Path '{path}' is not allowed, it MUST be in the root folder '{rootFolder}'."))
+
+        // Reject URL-encoded characters (e.g. %2e%2e → ..)
+        if path.Contains("%") then
+            raise (UnauthorizedAccessException($"Path '{path}' contains URL-encoded characters and is not allowed."))
+
+        // Check for path traversal
+        if path.Contains("..") then
+            raise (UnauthorizedAccessException($"Path '{path}' is not allowed."))
+
+        if path.Contains("\0") then // null byte
+            raise (UnauthorizedAccessException($"Path '{path}' contains a null byte."))
+
+
     member __.ValidatePath (path: string) =
+
         if String.IsNullOrWhiteSpace(path) then
             raise (ArgumentException("Path cannot be empty or whitespace."))
 

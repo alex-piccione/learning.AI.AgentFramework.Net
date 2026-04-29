@@ -11,6 +11,9 @@ type IAgent =
     abstract member LlmModel:string
     abstract member LlmProvider:string
 
+    //abstract member GetSettings: AgentSettings
+    //default this.GetSettings():AgentSettings = {Name; Description}
+
 type IChatAgent =
     inherit IAgent
     abstract member Ask: string * CancellationToken -> Task<AgentResponse>

@@ -1,68 +1,25 @@
 ﻿namespace Agents
 
-open Microsoft.Agents.AI
-open Microsoft.Extensions.AI
-open Middlewares
+open System.Threading.Tasks
 open Tools
 open Clients
 
-type AgentSettings = {
-    Name: string
-    Description: string
-    Instructions: string
-}
+type AgentBuilder(aiAgentHelper:AIAgentHelper, toolsProvider:ToolsProvider) =
 
-type AgentBuilder(toolsProvider:ToolsProvider) =
+    member this.CreateFilesManagerAgent(logger, clientWrapper:ClientWrapper, rootFolder): Task<FilesManagerAgent_v2> = task {
+        let tools = FilesManagerAgent_v2.CreateTools(logger, rootFolder)
+        let! aiAgent = aiAgentHelper.Create(FilesManagerAgent_v2.Definition, clientWrapper.ChatClient, tools)
+        return FilesManagerAgent_v2(aiAgent, clientWrapper)
+    }
 
-    let mutable agentMiddlewares:IAgentMiddleware list = []
-    let mutable functionMiddlewares:IFunctionMiddleware list = []
-    let mutable chatClientMiddlewares:IChatClientMiddleware list = []
-
-    member this.AddAgentMiddleware (middleware: IAgentMiddleware) : AgentBuilder =
-        agentMiddlewares <- middleware::agentMiddlewares
-        this
-    
-    member this.AddFunctionMiddleware (middleware: IFunctionMiddleware) : AgentBuilder =
-        functionMiddlewares <- middleware::functionMiddlewares
-        this
-    
-    member this.AddChatClientMiddleware (middleware: IChatClientMiddleware) : AgentBuilder =
-        chatClientMiddlewares <- middleware::chatClientMiddlewares
-        this
-
-
-    member _.CreateFilesManagerAgent(logger, clientWrapper, rootFolder) =
-        FilesManagerAgent(logger, clientWrapper, rootFolder)
+    member this.CreateFilesManagerAgent_v1(logger, clientWrapper:ClientWrapper, rootFolder): Task<FilesManagerAgent> = task {
+        let tools = FilesManagerAgent.CreateTools(logger, rootFolder)
+        let! aiAgent = aiAgentHelper.Create(FilesManagerAgent.Definition, clientWrapper.ChatClient, tools)
+        return FilesManagerAgent(aiAgent, clientWrapper)
+    }
 
     member _.CreateWeatherAgent(chatClient) =
         WeatherAgent("Weather Agent", chatClient, toolsProvider)
 
     member _.CreateCryptocurrencyAgent(clientWrapper) =
         CryptocurrencyAgent(clientWrapper, toolsProvider)
-
-    member _.CreateAgent(settings:AgentSettings, client:ClientWrapper, tools) = task {
-
-        let chatClientBuilder = 
-            client.ChatClient
-                .AsBuilder()
-            
-        let chatClientBuilder =
-            chatClientMiddlewares
-                |> List.fold (fun (builder:ChatClientBuilder) middleware -> builder.Use(middleware.GetResponse, null)) chatClientBuilder
-
-        let chatClient = chatClientBuilder.Build()
-
-        let agentBuilder = 
-            chatClient.AsAIAgent(settings.Instructions, settings.Name, settings.Description, tools)
-                .AsBuilder()
-
-        let agentBuilder = 
-            agentMiddlewares
-            |> List.fold (fun (builder:AIAgentBuilder) middleware -> builder.Use(middleware.Run, null))  agentBuilder
-
-        let agentBuilder =
-            functionMiddlewares
-            |> List.fold (fun (builder:AIAgentBuilder) middleware -> builder.Use(middleware.Next)) agentBuilder
-
-        return agentBuilder.Build()
-    }

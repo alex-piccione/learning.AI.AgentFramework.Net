@@ -16,6 +16,6 @@ type FunctionMiddleware (logger:ILogger) =
 
         member _.Next agent context next ct = 
             let args = String.Join(", ",  context.Arguments |> Seq.map(fun arg -> $"{arg.Key}: {arg.Value}"))
-            logger.LogDebug($"[🔨 Call function] {context.Function.Name}({args}) Iteration:{context.Iteration}")
+            logger.LogDebug($"[🔨 Call function] [🤖 {agent.Name}] {context.Function.Name}({args}) Iteration:{context.Iteration}")
             let result = next.Invoke(context, ct)
             result
