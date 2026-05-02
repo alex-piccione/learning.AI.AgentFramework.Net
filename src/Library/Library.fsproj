@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="README.md" />
     <Compile Include="ChatClient\ClientInfo.fs" />
     <Compile Include="Helper.fs" />
     <Compile Include="Constants.fs" />
@@ -31,19 +32,21 @@
     <Compile Include="Tools\ExpensesTools.fs" />
     <Compile Include="Tools\GoogleLyriaTools.fs" />
     <Compile Include="Tools\ToolsProvider.fs" />
+    <Compile Include="ChatClientFctory.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\IAgent.fs" />
-    <Compile Include="Agents\AIAgentHelper.fs" />
+    <Compile Include="Agents\AIAgentCreator.fs" />
     <Compile Include="Agents\FilesManagerAgent.fs" />
     <Compile Include="Agents\FilesManagerAgent_v2.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />
     <Compile Include="Agents\ExpensesAgent.fs" />
     <Compile Include="Agents\MusicistAgent.fs" />
-    <Compile Include="Agents\AgentBuilder.fs" />
+    <Compile Include="Agents\AgentFactory.fs" />
     <Compile Include="Agents\OrchestratorAgent.fs" />
-    <Compile Include="OpenAIClientBuilder.fs" />
   </ItemGroup>
+
+  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Alex75.KrakenApiClient" />
@@ -56,6 +59,7 @@
     <PackageReference Include="Microsoft.Agents.AI.Workflows" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="ModelContextProtocol" />
+    <PackageReference Include="OllamaSharp" />
     <PackageReference Include="OpenTelemetry.Api" />
   </ItemGroup>
 

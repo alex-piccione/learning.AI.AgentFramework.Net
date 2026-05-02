@@ -48,7 +48,12 @@ type RootFolderToolsBase(logger, rootFolder:string) =
         path.Replace(rootFolder, "")
 
 
+    // convert Windows path style (C:\\aaa) to Unix style (C:/aaa).
+    member __.GetUnixPathStyle path = Path.GetFullPath(path).Replace('\\', '/')
+
     member __.ValidatePath_v2 (path: string) =
+
+        let path = __.GetUnixPathStyle path
 
         if String.IsNullOrWhiteSpace(path) then
             raise (ArgumentException("Path cannot be empty or whitespace."))

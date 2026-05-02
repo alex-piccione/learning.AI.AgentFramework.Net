@@ -5,6 +5,7 @@ type AIService =
     | LocalOllama
     | AliBaba
     | AliBabaPlan
+    | DeepSeek
     | GitHub
     | Mistral
     | Openrouter
@@ -13,12 +14,14 @@ type AIService =
 
 let service = AIService.LocalOllama
 
+let ollamaContextSize = 8192
+
 let OllamaModel
     //= "gemma4:e2b"               // ✅ Good
     //= "gemma4:e4b"                  
     //= "bjoernb/gemma4-e4b-fast"  // ❌TOO BIG but fast
     //= "qwen3:8b"                 // slow and meh
-    = "qwen3.5:4b"               // ✅ Very Good
+    //= "qwen3.5:4b"               // ✅ Very Good
     //= "qwen3.5:9b"               // ❌TOO BIG, 8.8GB
     //= "nemotron-3-nano:4b"       // ok
     //= "nemotron-3-nano:4b-q8_0"    // ok but expensive ?
@@ -27,6 +30,10 @@ let OllamaModel
     //= "llama3-groq-tool-use"
     //= "llama3-groq-tool-use:latest"
     //= "llama3-gradient:8b"       // ❌ Does not support tools
+    //= "granite4.1:8b"
+    = "granite4.1:8b-16K" 
+    //= "granite4.1:8b-q5_K_M"    
+    // granite4.1:8b-q6_K
     //= "granite4:3b"              // ✅ ok, stupid sometimes?
     //= "granite4:3b-h"
     //= "functiongemma:270m"  dolphin-llama3:8b
@@ -43,6 +50,7 @@ let OllamaModel
     //= "dolphin-llama3:8b"        // ❌ Does not support tools
     //= "deepseek-r1:8b"           // ❌ Does not support tools
     //= "deepseek-r1:7b"           // ❌ Does not support tools
+    //= "granite3.3:8b"            // ❌ Does not understand it can use tool
 
 
 (*

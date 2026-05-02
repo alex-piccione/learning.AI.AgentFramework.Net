@@ -30,7 +30,7 @@ type AgentBase(agent:AIAgent, clientWrapper:ClientWrapper) =
         member _.LlmProvider = clientWrapper.Info.LlmProvider
 
 [<AbstractClass>]
-type ChatAgentBase(agent:AIAgent, clientWrapper:ClientWrapper) =
+type ChatAgentBase(agent:AIAgent, clientWrapper:ClientWrapper ) =
 
     let session = agent.CreateSessionAsync().AsTask() |> runTask
     let options = AgentRunOptions()

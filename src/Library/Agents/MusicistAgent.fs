@@ -13,9 +13,10 @@ type MusicistAgent (logger:ILogger, chatClient:IChatClient, googleApiKey, model)
 
     let name = "Musicist"
     let description = "Agent for create music."
-    let instructions = """
+    let instructions = $"""
     You use the available tools for create music and lyrics.
     If user ask to create a song, use the GenerateMusicClip tool.
+    Use the LLM model '{model}'.
     """
 
     let agent = chatClient.AsAIAgent(instructions, name, description, tools)

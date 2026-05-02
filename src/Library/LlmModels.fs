@@ -31,6 +31,9 @@ module LlmModels
         let Kimi = "kimi-k2.5"
         let MiniMax = "MiniMax-M2.5"
 
+    module public DeepSeek = 
+        let DeepSeek_V4_Flash = "deepseek-v4-flash"
+        let DeepSeek_V4_Pro = "deepseek-v4-pro"
 
     module public GitHub =
         let Phi_4_mini_instruct = "microsoft/Phi-4-mini-instruct"   // it returns the tool to call, not hte response
