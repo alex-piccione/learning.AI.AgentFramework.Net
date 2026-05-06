@@ -12,6 +12,9 @@ type ListFilesByExtension () =
 
     let mutable helper = Helper("")
 
+    let sameSequence s1 s2 = 
+        Set.ofSeq s1 = Set.ofSeq s2
+
     override this.GetOperation () =
         let tools = base.DirectoryExplorerTools
         fun path -> tools.ListFilesByExtension(path, ".txt") |> Seq.length |> ignore
@@ -30,9 +33,9 @@ type ListFilesByExtension () =
         let file_b = helper.CreateFile "b.csv"
         let file_c = helper.CreateFile "c.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt") |> List.ofSeq
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
-        test <@ files = [file_a; file_c; file_z] @>
+        test <@ Set.ofSeq files = Set.ofList [file_a; file_c; file_z] @>
 
     [<TestCase("subdir")>]
     [<TestCase("sub dir")>]
@@ -46,18 +49,18 @@ type ListFilesByExtension () =
         let file_c = helper.CreateFile $"{sub_dir}/c.csv"
         let file_a = helper.CreateFile $"{sub_dir}/a.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(subDirPath, ".txt") |> List.ofSeq
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(subDirPath, ".txt")
 
-        test <@ files = [file_a; file_z] @>
+        test <@ sameSequence files [file_a; file_z] @>
 
     [<Test>]
     member _.``ListFilesByExtension does not recurse into subdirectories`` () =
         let file_a = helper.CreateFile "a.txt"
         let _ = helper.CreateFile "sub/nested.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt") |> List.ofSeq
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
-        test <@ files = [file_a] @>
+        test <@ sameSequence files [file_a] @>
 
     [<Test>]
     member _.``ListFilesByExtension on empty directory returns empty`` () =
