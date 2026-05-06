@@ -49,9 +49,9 @@ type ListFiles () =
         let file_a = helper.CreateFile("a.txt")
         let _ = helper.CreateFile("sub/nested.txt")
 
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir)
+        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
 
-        test <@ files = Seq.ofList [file_a] @>
+        test <@ files = Set.ofList [file_a] @>
 
     [<Test>]
     member _.``ListFiles on empty directory returns empty`` () =
