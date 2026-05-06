@@ -27,9 +27,9 @@ type ListFiles () =
         let file_a = helper.CreateFile("a.txt")
         let file_b = helper.CreateFile("b.txt")
         
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> List.ofSeq
+        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
 
-        test <@ files = [file_a; file_b] @>
+        test <@ files = Set.ofSeq [file_a; file_b] @>
 
     [<TestCase("dir")>]
     [<TestCase("sub dir")>]
@@ -40,18 +40,18 @@ type ListFiles () =
         let file_a = helper.CreateFile (Path.Combine(sub_dir, "a.txt"))
         let file_b = helper.CreateFile (Path.Combine(sub_dir, "b.txt"))
 
-        let files = base.DirectoryExplorerTools.ListFiles(sub_dir) |> Seq.toList
+        let files = base.DirectoryExplorerTools.ListFiles(sub_dir) |> Set.ofSeq
 
-        test <@ files = [file_a; file_b] @>
+        test <@ files = Set.ofSeq [file_a; file_b] @>
 
     [<Test>]
     member _.``ListFiles does not recurse into subdirectories`` () =
         let file_a = helper.CreateFile("a.txt")
         let _ = helper.CreateFile("sub/nested.txt")
 
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> Seq.toList
+        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir)
 
-        test <@ files = [file_a] @>
+        test <@ files = Seq.ofList [file_a] @>
 
     [<Test>]
     member _.``ListFiles on empty directory returns empty`` () =
