@@ -14,6 +14,7 @@
     <Compile Include="Middlewares\AgentProhibitedWordsMiddleware.fs" />
     <Compile Include="Middlewares\FunctionMiddleware.fs" />
     <Compile Include="Middlewares\ChatClientMiddleware.fs" />
+    <Compile Include="Tools\Models\PathNormalizer.fs" />
     <Compile Include="Tools\Models\DirectoryExplorer.models.fs" />
     <Compile Include="Tools\Models\TimeTools.fs" />
     <Compile Include="Tools\Models\OpenMeteo.models.fs" />
@@ -21,6 +22,7 @@
     <Compile Include="Tools\Models\Kraken.models.fs" />
     <Compile Include="Tools\ToolsBase.fs" />
     <Compile Include="Tools\RootFolderToolsBase.fs" />
+    <Compile Include="Tools\RootFolderToolsBase_v2.fs" />
     <Compile Include="Tools\DirectoryExplorerTools.fs" />
     <Compile Include="Tools\DirectoryExplorerTools_v2.fs" />
     <Compile Include="Tools\FileManagerTools.fs" />
@@ -45,8 +47,6 @@
     <Compile Include="Agents\AgentFactory.fs" />
     <Compile Include="Agents\OrchestratorAgent.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Alex75.KrakenApiClient" />

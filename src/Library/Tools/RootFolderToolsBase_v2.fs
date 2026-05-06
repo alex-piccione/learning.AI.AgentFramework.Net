@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open PathNormalizer
 
 (*
 This is a base type for tools that are limited to operate only in a specified root folder.
@@ -18,9 +19,10 @@ What is a Null Byte Injection Attack?
   - This can lead to unintended behavior, such as accessing or modifying files outside the intended directory.
 *)
 
-//[<Abstract>]
-type RootFolderToolsBase(logger, rootFolder:string) =
+type RootFolderToolsBase_v2 (logger, rootFolderPath:string) =
     inherit ToolsBase(logger)
+
+    let rootFolder = normalizePath(rootFolderPath)
 
     do
         if not (Directory.Exists rootFolder) then
@@ -28,11 +30,13 @@ type RootFolderToolsBase(logger, rootFolder:string) =
 
     member __.ValidatePath (path: string) =
 
+        let path = normalizePath path
+
         if String.IsNullOrWhiteSpace(path) then
             raise (ArgumentException("Path cannot be empty or whitespace."))
 
-        if Path.IsPathRooted(path) then
-            raise (ArgumentException($"Path '{path}' is absolute and not allowed. Please use relative paths."))
+        if not (path.StartsWith(rootFolder)) then
+            raise (ArgumentException($"Path '{path}' is not allowed, it MUST be in the root folder '{rootFolder}'."))
 
         // Reject URL-encoded characters (e.g. %2e%2e → ..)
         if path.Contains("%") then

@@ -9,17 +9,6 @@ open Tools.DirectoryExplorer.Models
 type DirectoryExplorerTools (logger:ILogger, rootFolder:string) =
     inherit RootFolderToolsBase(logger, rootFolder)
 
-    [<Description("Reads the content of a file as text. Provide the relative file path from the root folder.")>]
-    member this.ReadFile(
-        [<Description("Relative path to the file from the root folder, e.g. 'src/config.json'")>]
-        filePath: string): string =
-
-        this.ValidatePath filePath
-        let fullPath = Path.Combine(rootFolder, filePath)
-        if not (File.Exists fullPath) then
-            raise (FileNotFoundException($"File '{filePath}' does not exist."))
-        File.ReadAllText fullPath
-
     [<Description("List all the files in a given directory.")>]
     member this.ListFiles(
         [<Description("""Directory relative path. IT MUST BE RELATIVE TO THE ROOT FOLDER,
@@ -48,19 +37,13 @@ type DirectoryExplorerTools (logger:ILogger, rootFolder:string) =
             raise (DirectoryNotFoundException($"Directory '{directoryPath}' does not exist."))
         Directory.EnumerateDirectories fullPath
 
-    //[<Description("Enumerate the directories of the given directory path")>]
-    //member this.ListDirectories (directory:string) =
-    //    Directory.EnumerateDirectories directory
 
-    //[<Description("Enumerate the files and directories of the given directory path")>]
-    //member this.GetDirectoryTree(directory:string) =
-    //    Directory.EnumerateFileSystemEntries directory
 
     //[<Description("""
     //    Get a flat tree structure of all files and directories, at every level, of the root folder.
     //    Returns lines prefixed with 'd ' for directories (ending with '/') and 'f ' for files with their relative paths from root folder.
     //    """)>]
-    member this.GetTree_back() : string seq =
+    member this.GetTreeAsText() : string seq =
 
         let getFileNameSafe (path: string | null) : string option =
             if isNull path then None

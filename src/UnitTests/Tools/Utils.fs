@@ -21,3 +21,11 @@ let getDirPath (path:string) =  if_null (Path.GetFileName path) "not set"
 type TreeItem with
     static member File (path) = {Type="file"; Name=getFilePath path; Path=path}
     static member Directory (path) = {Type="directory"; Name=getDirPath path; Path=path}
+
+
+let asWin (path:string) =
+    path.Replace("/", "\\")
+
+let asUnix (path:string) =
+    path.Replace("\\", "/")
+

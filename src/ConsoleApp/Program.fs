@@ -99,7 +99,7 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
         //let question = $"How many directories are in {torrentDir} ?"
         //let question = $"What tools do you have? What tools do your sub-agent have? What them do?"
 
-        let question = $"List the files in {torrentDir}. Highlight the .mp3 ones (if there are). Also search in sub-folders. Return a flat list."
+        let question = $"List the MP3 files in {torrentDir}. Also search in sub-folders. Return a flat list."
         //let question = $"List the sub-folders in {torrentDir}. List the files there, highlight the .mp3 ones (if there are)."
 
         // create Orchestrator Agent

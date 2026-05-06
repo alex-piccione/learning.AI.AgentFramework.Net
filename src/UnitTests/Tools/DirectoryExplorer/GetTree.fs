@@ -5,9 +5,10 @@ open System.IO
 open NUnit.Framework
 open Swensen.Unquote
 
-open RootFolderTestBase
 open Tools.DirectoryExplorer.Models
+open RootFolderTestBase
 open Utils
+
 
 type GetTree () =
     inherit TestBase()
