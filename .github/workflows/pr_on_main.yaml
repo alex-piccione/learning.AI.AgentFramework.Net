@@ -20,9 +20,9 @@ jobs:
       run: dotnet restore
 
     - name: 🏗️ Build
-      run: dotnet build -c Release --no-restore
+      run: dotnet build src/ -c Release --no-restore
 
     - name: 🧪 Run Tests
       run: |
-        dotnet test ${SOLUTION_FILE} --no-restore -c Release \
+        dotnet test src/ --no-restore -c Release \
           --filter "TestCategory!=SKIP_ON_DEPLOY" & TestCategory!=REQUIRES_API_KEY" \"
