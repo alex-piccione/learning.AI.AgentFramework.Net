@@ -6,9 +6,14 @@ module LlmModels
         let GPT_5_nano = "gpt-5-nano"
 
     module public Alibaba =
+        let Qwen_3_max = "qwen3-max"
         let Qwen_3_6_plus = "qwen3.6-plus"
         let Qwen_3_5_plus = "qwen3.5-plus"
         let Qwen_3_5_plus_2026_02_15 = "qwen3.5-plus-2026-02-15"
+        let Qwen_3_5_122b_a10b = "qwen3.5-122b-a10b"
+        let Qwen_3_32b = "qwen3-32b"
+        let Deepseek_v3_2 = "deepseek-v3.2"
+
         //let Qwen3_max_2026_01_23 = "qwen3-max-2026-01-23"
         //let Qwen_Coder_Next = "qwen3-coder-next"
         //let Qwen_Coder_Plus = "qwen3-coder-plus"
@@ -26,6 +31,9 @@ module LlmModels
         let Kimi = "kimi-k2.5"
         let MiniMax = "MiniMax-M2.5"
 
+    module public DeepSeek = 
+        let DeepSeek_V4_Flash = "deepseek-v4-flash"
+        let DeepSeek_V4_Pro = "deepseek-v4-pro"
 
     module public GitHub =
         let Phi_4_mini_instruct = "microsoft/Phi-4-mini-instruct"   // it returns the tool to call, not hte response

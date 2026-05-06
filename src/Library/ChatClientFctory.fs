@@ -1,32 +1,40 @@
-module OpenAIClientBuilder
+namespace ChatClientFactory
 
 open System
 open OpenAI
 open Microsoft.Extensions.AI
 open Clients
+open OllamaSharp
 
 type LLMProvider =
     | AliBaba
     | AliBabaPlan
+    | DeepSeek
     | GitHub
     | Mistral
     | Openrouter
     | Xiaomi
     | Google
 
-/// Helper for create OpenAI Client
-type OpenAIClientBuilder () =
+type ChatClientFactory () =
 
-    /// Create a OpenAI Chat Client
     static member BuildOpenAIChatClient(apiKey:string, model:string):IChatClient * ClientInfo =
         //OpenAI.Chat.ChatClient(model, apiKey).AsIChatClient(), model
         OpenAIClient(apiKey).GetChatClient(model).AsIChatClient(), ClientInfo(model, "OpenAI")
 
-    static member BuildLocalOllamaChatClient(model:string):IChatClient * ClientInfo =
+    static member BuildLocalOllamaChatClient (url:string, model:string):IChatClient * ClientInfo =
+
+        let config = OllamaApiClient.Configuration()
+        config.Uri <- Uri(url)
+        config.Model <- model
+        new OllamaApiClient(config) :> IChatClient, ClientInfo(model, "Local Ollama")
+
+    static member BuildLocalOllamaChatClient_old(model:string):IChatClient * ClientInfo =
+
         let credentials = ClientModel.ApiKeyCredential "not required"
         let options = OpenAI.OpenAIClientOptions()
         options.Endpoint <- Uri "http://localhost:11434/v1"
-        //OpenAI.Chat.ChatClient(model, credentials, options).AsIChatClient(), model
+
         OpenAIClient(credentials, options).GetChatClient(model).AsIChatClient(), ClientInfo(model, "Local Ollama")
 
     static member BuildOpenAICompatibleChatClient(provider:LLMProvider, apiKey:string, model:string):IChatClient * ClientInfo =
@@ -35,6 +43,7 @@ type OpenAIClientBuilder () =
             match provider with
             | LLMProvider.AliBaba -> Constants.LLMProviders.ALIBABA_URL
             | LLMProvider.AliBabaPlan -> Constants.LLMProviders.ALIBABA_PLAN_URL
+            | LLMProvider.DeepSeek -> Constants.LLMProviders.DEEPSEEK_URL
             | LLMProvider.GitHub -> Constants.LLMProviders.GITHUB_URL
             | LLMProvider.Mistral -> Constants.LLMProviders.MISTRAL_URL
             | LLMProvider.Openrouter -> Constants.LLMProviders.OPENROUTER_URL
@@ -44,21 +53,6 @@ type OpenAIClientBuilder () =
         let credentials = ClientModel.ApiKeyCredential apiKey
         let options = OpenAI.OpenAIClientOptions()
         options.Endpoint <- Uri url
+
         //OpenAI.Chat.ChatClient(model, credentials, options).AsIChatClient(), model
         OpenAIClient(credentials, options).GetChatClient(model).AsIChatClient(), ClientInfo(model, provider.ToString())
-
-
-    (* Another way to create a OpenAI compatible ChatClient
-    using Microsoft.Extensions.AI;
-
-    IChatClient client =
-        new OpenAI.Chat.ChatClient("gpt-4o-mini", Environment.GetEnvironmentVariable("OPENAI_API_KEY"))
-        .AsIChatClient();
-
-    Console.WriteLine(await client.GetResponseAsync(
-    [
-        new ChatMessage(ChatRole.System, "You are a helpful AI assistant"),
-        new ChatMessage(ChatRole.User, "What is AI?"),
-    ]));
-
-    *)

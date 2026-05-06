@@ -13,6 +13,7 @@ let config =
 let openAIKey = config.Get "OpenAI api key"
 let alibabaApiKey = config.Get "AliBaba api key"
 let alibabaPlanApiKey = config.Get "AliBaba Plan api key"
+let deepseekApiKey = config.Get "DeepSeek api key"
 let githubToken = config.Get "GitHub token"
 let mistralApiKey = config.Get "Mistral api key"
 let openrouterApiKey = config.Get "Openrouter api key"

@@ -13,8 +13,8 @@ type ReadFile () =
     let mutable helper = Helper("")
 
     override this.GetOperation () =
-        let tools = base.DirectoryExplorerTools
-        fun path -> tools.ReadFile(path) |> ignore
+        let tools = base.FileManagerTools
+        fun path -> tools.ReadFile (path) |> ignore
 
     [<SetUp>]
     member _.SetupAdditional() =
@@ -29,7 +29,7 @@ type ReadFile () =
         helper.CreateFile(file, expectedContent)
 
         // Execute
-        let content = base.DirectoryExplorerTools.ReadFile(file)
+        let content = base.FileManagerTools.ReadFile(file)
 
         test <@ content = expectedContent @>
 
@@ -40,12 +40,12 @@ type ReadFile () =
         helper.CreateFile(file, expectedContent)
 
         // Execute
-        let content = base.DirectoryExplorerTools.ReadFile(file)
+        let content = base.FileManagerTools.ReadFile(file)
 
         test <@ content = expectedContent @>
 
     [<Test>]
     member _.``ReadFile when file does not exist`` () =
         raisesWith<FileNotFoundException>
-            <@ base.DirectoryExplorerTools.ReadFile("not_exist.txt") @>
+            <@ base.FileManagerTools.ReadFile("not_exist.txt") @>
             (fun ex -> <@ ex.Message = "File 'not_exist.txt' does not exist." @>)

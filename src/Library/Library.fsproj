@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="README.md" />
     <Compile Include="ChatClient\ClientInfo.fs" />
     <Compile Include="Helper.fs" />
     <Compile Include="Constants.fs" />
@@ -13,13 +14,17 @@
     <Compile Include="Middlewares\AgentProhibitedWordsMiddleware.fs" />
     <Compile Include="Middlewares\FunctionMiddleware.fs" />
     <Compile Include="Middlewares\ChatClientMiddleware.fs" />
+    <Compile Include="Tools\Models\PathNormalizer.fs" />
+    <Compile Include="Tools\Models\DirectoryExplorer.models.fs" />
     <Compile Include="Tools\Models\TimeTools.fs" />
     <Compile Include="Tools\Models\OpenMeteo.models.fs" />
     <Compile Include="Tools\Models\Coingecko.models.fs" />
     <Compile Include="Tools\Models\Kraken.models.fs" />
     <Compile Include="Tools\ToolsBase.fs" />
     <Compile Include="Tools\RootFolderToolsBase.fs" />
+    <Compile Include="Tools\RootFolderToolsBase_v2.fs" />
     <Compile Include="Tools\DirectoryExplorerTools.fs" />
+    <Compile Include="Tools\DirectoryExplorerTools_v2.fs" />
     <Compile Include="Tools\FileManagerTools.fs" />
     <Compile Include="Tools\WiseTools.fs" />
     <Compile Include="Tools\KrakenTools.fs" />
@@ -29,16 +34,18 @@
     <Compile Include="Tools\ExpensesTools.fs" />
     <Compile Include="Tools\GoogleLyriaTools.fs" />
     <Compile Include="Tools\ToolsProvider.fs" />
+    <Compile Include="ChatClientFctory.fs" />
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\IAgent.fs" />
+    <Compile Include="Agents\AIAgentCreator.fs" />
     <Compile Include="Agents\FilesManagerAgent.fs" />
+    <Compile Include="Agents\FilesManagerAgent_v2.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />
     <Compile Include="Agents\ExpensesAgent.fs" />
     <Compile Include="Agents\MusicistAgent.fs" />
-    <Compile Include="Agents\AgentBuilder.fs" />
+    <Compile Include="Agents\AgentFactory.fs" />
     <Compile Include="Agents\OrchestratorAgent.fs" />
-    <Compile Include="OpenAIClientBuilder.fs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +59,7 @@
     <PackageReference Include="Microsoft.Agents.AI.Workflows" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="ModelContextProtocol" />
+    <PackageReference Include="OllamaSharp" />
     <PackageReference Include="OpenTelemetry.Api" />
   </ItemGroup>
 

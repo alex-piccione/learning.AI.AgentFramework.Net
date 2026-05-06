@@ -3,7 +3,7 @@ open System.Threading
 open Microsoft.Extensions.Logging
 open Spectre.Console
 open Helper
-open OpenAIClientBuilder
+open ChatClientFactory
 open Middlewares
 open Agents
 open Secrets
@@ -19,7 +19,6 @@ let loggerFactory = LoggerFactory.Create(
     )
 
 let logger = loggerFactory.CreateLogger("ConsoleApp")
-
 
 let secrets:Tools.ThirdPartySecrets = {
     krakenPublicKey = krakenPublicKey
@@ -39,64 +38,75 @@ let prohibitedWordsMiddleware = AgentProhibitedWordsMiddleware(logger)
 let functionMiddleware = FunctionMiddleware(logger)
 let chatClientMiddleware = ChatClientCallMiddleware(logger)
 
-let agentBuilder =
-    AgentBuilder(toolsProvider)
+let aiAgentCreator =
+   AIAgentCreator()
         .AddAgentMiddleware(agentTelemetryMiddleware)
         .AddAgentMiddleware(prohibitedWordsMiddleware)
         .AddFunctionMiddleware(functionMiddleware)
         .AddChatClientMiddleware(chatClientMiddleware)
 
+let agentFactory = AgentFactory(aiAgentCreator, toolsProvider)
+
+// create chat client "manually"
 let chatClient, clientInfo =
     match Settings.service with
-    | Settings.AIService.OpenAI -> OpenAIClientBuilder.BuildOpenAIChatClient (openAIKey, LlmModels.OpenAI.GPT_5_2) 
-    | Settings.AIService.LocalOllama -> OpenAIClientBuilder.BuildLocalOllamaChatClient Settings.OllamaModel
-    | Settings.AIService.AliBaba -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, LlmModels.Alibaba.Qwen_3_5_plus_2026_02_15)
-    | Settings.AIService.AliBabaPlan -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.AliBabaPlan, alibabaPlanApiKey, LlmModels.AlibabaPlan.Zhipu)
-    | Settings.AIService.GitHub -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.GitHub, githubToken, LlmModels.GitHub.Phi_4_mini_instruct)
-    | Settings.AIService.Mistral -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Mistral, mistralApiKey, LlmModels.Mistral.MINISTRAL_14b_2512)
-    | Settings.AIService.Openrouter -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Openrouter, openrouterApiKey, LlmModels.Openrouter.Minimax_2_5_Free)
-    | Settings.AIService.Xiaomi -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Xiaomi, xiaomiApiKey, LlmModels.Xiaomi.Mimo_V2_Pro)
-    | Settings.AIService.Google -> OpenAIClientBuilder.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
+    | Settings.AIService.OpenAI -> ChatClientFactory.BuildOpenAIChatClient (openAIKey, LlmModels.OpenAI.GPT_5_2)
+    | Settings.AIService.LocalOllama -> ChatClientFactory.BuildLocalOllamaChatClient (Constants.LLMProviders.LOCAL_OLLAMA_URL, Settings.OllamaModel)
+    | Settings.AIService.AliBaba -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.AliBaba, alibabaApiKey, LlmModels.Alibaba.Qwen_3_5_122b_a10b)
+    | Settings.AIService.AliBabaPlan -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.AliBabaPlan, alibabaPlanApiKey, LlmModels.AlibabaPlan.Zhipu)
+    | Settings.AIService.DeepSeek -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.DeepSeek, deepseekApiKey, LlmModels.DeepSeek.DeepSeek_V4_Flash)
+    | Settings.AIService.GitHub -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.GitHub, githubToken, LlmModels.GitHub.Phi_4_mini_instruct)
+    | Settings.AIService.Mistral -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.Mistral, mistralApiKey, LlmModels.Mistral.MINISTRAL_14b_2512)
+    | Settings.AIService.Openrouter -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.Openrouter, openrouterApiKey, LlmModels.Openrouter.Minimax_2_5_Free)
+    | Settings.AIService.Xiaomi -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.Xiaomi, xiaomiApiKey, LlmModels.Xiaomi.Mimo_V2_Pro)
+    | Settings.AIService.Google -> ChatClientFactory.BuildOpenAICompatibleChatClient (LLMProvider.Google, googleApiKey, LlmModels.Google.Gemma_4_26B)
 
 let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
-
 
 // Test Agent //
 
 (task {
     try
-        (* 
+        (*
         // Weather Agent //
-        let agent = agentBuilder.CreateWeatherAgent(clientWrapper)
+        let agent = agentFactory.CreateWeatherAgent(clientWrapper)
 
         //let question = AnsiConsole.Ask<string>("[bold green]Ask the agent about the weather:[/]")
         //let question = "Dammi le coordinate geografiche di Pesaro"
         let question = "Come è il tempo a Pesaro? Answer in Spanish."
         *)
 
-        //(*
+        (*
         // cryptocurrency //
-        //let agent = agentBuilder.CreateCryptocurrencyAgent(clientWrapper)
+        let agent = agentFactory.CreateCryptocurrencyAgent(clientWrapper)
 
         //let question = "What is my balance on Kraken, considering all the tokens? Calculate the balances in EUR and give me also the total. Give me a table in the answer."
         //let question = "What is the exchange rates of GBP/EUR and USD/EUR?"
         //let question = "What is the market ticker (bid and ask) of XRP/EUR and SOL/EUR ?"
         //let question = "List my open orders on Kraken."
-        //*)
+        *)
 
         // test prohibited word
         //let question = "Who is Mussolini ?"  // test prohibited words
 
-
         // Agent call //
         //let question = "Quanti EUR sono 60 GBP? Quanti GBP ci vogliono per 200 EUR ?"
-        let torrentDir = "T:\Torrent\Completed"
-        let question = $"Can you see the files in {torrentDir} (or its subfolders)? There are .mp3 files?"
+        //let torrentDir = "T:\Torrent\Completed\Angine de Poitrine"
+        let torrentDir = "A:\mp3\AFRO"
+        //let question = $"What is the root folder you can look at?"
+        //let question = $"Can you see the files in {torrentDir} (or its subfolders)? There are .mp3 files?"
+        //let question = $"How many files and directories are in {torrentDir} ? Use the GetTree tool and count items of type 'file' and 'directory'?"
+        //let question = $"How many directories are in {torrentDir} ?"
+        //let question = $"What tools do you have? What tools do your sub-agent have? What them do?"
+
+        let question = $"List the MP3 files in {torrentDir}. Also search in sub-folders. Return a flat list."
+        //let question = $"List the sub-folders in {torrentDir}. List the files there, highlight the .mp3 ones (if there are)."
 
         // create Orchestrator Agent
-        //let filesManager = agentBuilder.CreateFilesManagerAgent(logger, clientWrapper, torrentDir)
-        let! agent = OrchestratorAgent.Create(logger, agentBuilder, clientWrapper, Some torrentDir, ct)
-                
+        //let! filesManageAgent = agentBuilder.CreateFilesManagerAgent(logger, clientWrapper, torrentDir)
+        //let agent = filesManageAgent :> IChatAgent
+        let! agent = OrchestratorAgent.Create(logger, aiAgentCreator, agentFactory, clientWrapper, Some torrentDir, ct)
+
         AnsiConsole.MarkupLine $"🤖 [blue]{agent.Name}[/] using 🧠 [cyan]{agent.LlmModel}[/] on [cyan]{agent.LlmProvider}[/].\n"
 
         AnsiConsole.WriteLine()
@@ -133,9 +143,8 @@ let clientWrapper = Clients.ClientWrapper(chatClient, clientInfo)
        AnsiConsole.MarkupLine $"[red]Failed to call Agent.[/]"
        AnsiConsole.WriteException(ex)
 
-}).Spinner(Spinner.Known.Aesthetic) 
+}).Spinner(Spinner.Known.Aesthetic)
 |> runTask
-
 
 
 (* test local MCP
@@ -156,12 +165,21 @@ task {
 let musicistAgent = MusicistAgent(logger, chatClient, googleApiKeyForLyria, "lyria-3-clip-preview")
 
 task {
-    let song = """
+    (*let song = """
         Create a prog rock song for Pablo who is riding his Caballero motorbike.
         He has fun while driving on mountain roads and in narrow paths in the wood.
          He has a lot of fun and is happy.
         15 seconds long.
         Save it in D:/AI-songs/caballero.mp3
+        """
+        *)
+
+    let song = """
+        Create a pop song, male singer with low voice.
+        It is about Donatello who went to Pesaro, to the beach.
+        He had fun while meet a friend and he is going now on a mountain to meet a girl.
+        30 seconds long.
+        Save it in D:/AI-songs/donatello_3.mp3
         """
 
     AnsiConsole.MarkupLine($"[cyan]{song}[/]")

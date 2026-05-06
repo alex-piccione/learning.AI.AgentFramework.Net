@@ -9,14 +9,16 @@ open Microsoft.Extensions.Logging
 type FileManagerTools (logger:ILogger, rootFolder:string) =
     inherit RootFolderToolsBase(logger, rootFolder)
 
-    //[<Description("Create a directory in the given directory path")>]
-    //member this.CreateDirectory(
-    //    [<Description("Parent directory where the new directory has to be created")>]
-    //    directory:string,
-    //    [<Description("Name of the directory to create")>]
-    //    newDirectory:string
-    //    ) =
-    //    Directory.CreateDirectory (Path.Combine [|directory; newDirectory|])
+    [<Description("Reads the content of a file as text. Provide the relative file path from the root folder.")>]
+    member this.ReadFile(
+        [<Description("Relative path to the file from the root folder, e.g. 'src/config.json'")>]
+        filePath: string): string =
+
+        this.ValidatePath filePath
+        let fullPath = Path.Combine(rootFolder, filePath)
+        if not (File.Exists fullPath) then
+            raise (FileNotFoundException($"File '{filePath}' does not exist."))
+        File.ReadAllText fullPath
 
     [<Description("Create a new file or overwrite existing file with the given content. Creates parent directories if they don't exist.")>]
     member this.WriteTextFile(

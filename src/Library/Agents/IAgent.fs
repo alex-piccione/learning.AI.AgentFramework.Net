@@ -11,6 +11,9 @@ type IAgent =
     abstract member LlmModel:string
     abstract member LlmProvider:string
 
+    //abstract member GetSettings: AgentSettings
+    //default this.GetSettings():AgentSettings = {Name; Description}
+
 type IChatAgent =
     inherit IAgent
     abstract member Ask: string * CancellationToken -> Task<AgentResponse>
@@ -27,7 +30,7 @@ type AgentBase(agent:AIAgent, clientWrapper:ClientWrapper) =
         member _.LlmProvider = clientWrapper.Info.LlmProvider
 
 [<AbstractClass>]
-type ChatAgentBase(agent:AIAgent, clientWrapper:ClientWrapper) =
+type ChatAgentBase(agent:AIAgent, clientWrapper:ClientWrapper ) =
 
     let session = agent.CreateSessionAsync().AsTask() |> runTask
     let options = AgentRunOptions()
