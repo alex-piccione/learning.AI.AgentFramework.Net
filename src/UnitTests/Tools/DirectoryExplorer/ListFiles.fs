@@ -13,7 +13,7 @@ type ListFiles () =
     let mutable helper = Helper("")
 
     override this.GetOperation () =
-        let tools = base.DirectoryExplorerTools
+        let tools = base.FileExplorerTools
         fun path -> tools.ListFiles(path) |> Seq.length |> ignore
 
     [<SetUp>]

@@ -18,7 +18,7 @@ type GetTreeOfDirectories () =
 
     [<Test>]
     member _.``returns empty for empty directory`` () =
-        let result = base.DirectoryExplorerTools.GetDirectoriesTree base.TestDir
+        let result = base.FileExplorerTools.GetDirectoriesTree base.TestDir
 
         test <@ result.Length = 0 @>
 
@@ -30,7 +30,7 @@ type GetTreeOfDirectories () =
         
         let _ = helper.CreateFile (Path.Combine(dirPath, "README.md"))
 
-        let result = base.DirectoryExplorerTools.GetDirectoriesTree base.TestDir
+        let result = base.FileExplorerTools.GetDirectoriesTree base.TestDir
 
         test <@ result = [dirPath] @>
 
@@ -42,7 +42,7 @@ type GetTreeOfDirectories () =
         let _ = helper.CreateFile "aaa/bbb/File.ext"
         let _ = helper.CreateFile "README.md"
 
-        let result = base.DirectoryExplorerTools.GetDirectoriesTree base.TestDir
+        let result = base.FileExplorerTools.GetDirectoriesTree base.TestDir
 
         test <@ result = [dir_aaa; dir_bbb] @>
 

@@ -64,7 +64,7 @@ module TestHelpers =
         let testDir = Path.Combine(Path.GetTempPath(), $"Test_DirectoryExplorerTools_{Guid.NewGuid().ToString()[..6]}")
         Console.WriteLine($"Test dir: {testDir}")
         Directory.CreateDirectory(testDir) |> ignore
-        let directoryExplorerTools = DirectoryExplorerTools_v2(logger, testDir)
+        let directoryExplorerTools = FileExplorerTools(logger, testDir)
         let fileManagerTools = FileManagerTools(logger, testDir)
         (testDir, directoryExplorerTools, fileManagerTools)
 
@@ -83,7 +83,7 @@ type TestBase() =
     let mutable fileManagerTools = Unchecked.defaultof<FileManagerTools>
 
     member _.TestDir = testDir
-    member _.DirectoryExplorerTools = directoryExplorerTools
+    member _.FileExplorerTools = directoryExplorerTools
     member _.FileManagerTools = fileManagerTools
 
     [<SetUp>]

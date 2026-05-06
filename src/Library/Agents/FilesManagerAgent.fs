@@ -101,7 +101,7 @@ type FilesManagerAgent (agent:AIAgent, clientWrapper:ClientWrapper) =
             ) :> AITool
 
         asList [
-           DirectoryExplorerTools(logger, rootFolder).GetTools()
+           FileExplorerTools(logger, rootFolder).GetTools()
            FileManagerTools(logger, rootFolder).GetTools()
            [|rootFolderTool; getReleativePathTool|]
         ]

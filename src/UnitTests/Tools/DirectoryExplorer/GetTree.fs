@@ -15,7 +15,7 @@ type GetTree () =
 
     [<Test>]
     member _.``GetTree returns empty for empty directory`` () =
-        let result = base.DirectoryExplorerTools.GetTree()
+        let result = base.FileExplorerTools.GetTree()
 
         test <@ result.TooManyItems = false @>
         test <@ result.Items.Length = 0 @>
@@ -25,7 +25,7 @@ type GetTree () =
         File.WriteAllText(Path.Combine(base.TestDir, "file1.txt"), "content1")
         File.WriteAllText(Path.Combine(base.TestDir, "file2.txt"), "content2")
 
-        let result = base.DirectoryExplorerTools.GetTree()
+        let result = base.FileExplorerTools.GetTree()
 
         test <@ result.TooManyItems = false @>
         test <@ result.Items.Length = 2 @>
@@ -36,7 +36,7 @@ type GetTree () =
     member _.``GetTree returns directories in root`` () =
         Directory.CreateDirectory(Path.Combine(base.TestDir, "subdir")) |> ignore
 
-        let result = base.DirectoryExplorerTools.GetTree()
+        let result = base.FileExplorerTools.GetTree()
 
         test <@ result.TooManyItems = false @>
         test <@ result.Items.Length = 1 @>
@@ -48,7 +48,7 @@ type GetTree () =
         File.WriteAllText(Path.Combine(base.TestDir, "src/Core/Library.fs"), "code")
         File.WriteAllText(Path.Combine(base.TestDir, "README.md"), "readme")
 
-        let result = base.DirectoryExplorerTools.GetTree()
+        let result = base.FileExplorerTools.GetTree()
 
         test <@ result.TooManyItems = false @>
         test <@ result.Items.Length = 4 @>
@@ -62,7 +62,7 @@ type GetTree () =
         Directory.CreateDirectory(Path.Combine(base.TestDir, "aaa/bbb/ccc")) |> ignore
         File.WriteAllText(Path.Combine(base.TestDir, "aaa/bbb/ccc/deep.txt"), "deep")
 
-        let result = base.DirectoryExplorerTools.GetTree()
+        let result = base.FileExplorerTools.GetTree()
 
         test <@ result.TooManyItems = false @>
         test <@ result.Items |> Seq.contains (TreeItem.Directory "aaa") @>
@@ -75,7 +75,7 @@ type GetTree () =
         Directory.CreateDirectory(Path.Combine(base.TestDir, "music/Le Orme")) |> ignore
         File.WriteAllText(Path.Combine(base.TestDir, "music/Le Orme/Gioco di bimba.mp3"), "not a text file")
 
-        let result = base.DirectoryExplorerTools.GetTree()
+        let result = base.FileExplorerTools.GetTree()
 
         test <@ result.TooManyItems = false @>
         test <@ result.Items.Length = 3 @>

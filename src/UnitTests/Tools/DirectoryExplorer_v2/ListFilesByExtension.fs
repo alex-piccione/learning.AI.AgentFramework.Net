@@ -16,7 +16,7 @@ type ListFilesByExtension () =
         Set.ofSeq s1 = Set.ofSeq s2
 
     override this.GetOperation () =
-        let tools = base.DirectoryExplorerTools
+        let tools = base.FileExplorerTools
         fun path -> tools.ListFilesByExtension(path, ".txt") |> Seq.length |> ignore
 
     [<SetUp>]
