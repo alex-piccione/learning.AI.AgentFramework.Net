@@ -33,7 +33,7 @@ type DirectoryExplorerTools_v2 (logger:ILogger, rootFolder:string) =
         if not (Directory.Exists directoryPath) then
             raise (DirectoryNotFoundException($"Directory '{directoryPath}' does not exist."))
 
-        Directory.EnumerateDirectories directoryPath |> Seq.map normalizePath
+        Directory.EnumerateDirectories directoryPath |> Seq.map normalizePath  // already orderred alphabetically
 
     [<Description("List all files with a specific extension in the given directory.")>]
     member this.ListFilesByExtension(
@@ -48,7 +48,7 @@ type DirectoryExplorerTools_v2 (logger:ILogger, rootFolder:string) =
         if not (Directory.Exists directoryPath) then
             raise (DirectoryNotFoundException($"Directory '{directoryPath}' does not exist."))
 
-        Directory.EnumerateFiles(directoryPath, $"*{extension}")
+        Directory.EnumerateFiles(directoryPath, $"*{extension}") |> Seq.map normalizePath  // already orderred alphabetically
 
     
     [<Description("Returns a flat list of every directory within the given directory.

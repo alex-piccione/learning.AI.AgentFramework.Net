@@ -1,8 +1,13 @@
 # TODO
 
+## In Progress
+
+[ ] Files Manager. Add tests for spaces in file and directory name 
+
+
+## Backlog
 
 [ ] Try to optimize Files Manager v1.
-[ ] Files Manager. Add tests for spaces in file and directory name 
 [ ] Files Manager. Builder strategy to be able to add multiple Files Manager.
 [ ] DeepSeek custom chat options to solve the error:
     System.ClientModel.ClientResultException: HTTP 400 (invalid_request_error: invalid_request_error)
@@ -12,20 +17,19 @@
 
 [ ] Add Ollama option for context window size
 
-var options = new OllamaOptions
-{
-    ContextWindowSize = 32768,  // Or 65536 if VRAM allows
-    // Other settings...
-};
-var client = new OllamaChatClient("granite4.1:8b", options, httpClient);
-
 [ ] Finish to see simple introductory: https://www.aihero.dev/what-is-the-context-window
 
-[ ] Watch this vidkeo: https://www.youtube.com/watch?v=ubPOWYtXtQ4
+[ ] Watch this video: https://www.youtube.com/watch?v=ubPOWYtXtQ4
 
+[ ] TESTS: should we check a UNC path is not passed to FileSystem Agent?
 
 
 ## Issue with too many records for Files Manager
+
+Found files must be passed in context, not in the prompt.  
+Agents should use a shared context.
+
+---
 
 The agent, despite using corectly ListFiles and ListDirectories recursively cannot manage too many informations.
 Maybe it has to store the obtained info somewhere while it has not ALL the data to compose the result.

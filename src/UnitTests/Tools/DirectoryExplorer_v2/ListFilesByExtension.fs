@@ -24,60 +24,61 @@ type ListFilesByExtension () =
 
     [<Test>]
     member _.``ListFilesByExtension in root`` () =
-        helper.CreateFile_bak("a.txt", "")
-        helper.CreateFile_bak("b.csv", "")
-        helper.CreateFile_bak("c.txt", "")
+        // note, not in alphabetic order
+        let file_z = helper.CreateFile "Z.txt"
+        let file_a = helper.CreateFile "a.txt"
+        let file_b = helper.CreateFile "b.csv"
+        let file_c = helper.CreateFile "c.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(".", ".txt") |> Seq.map Path.GetFileName |> Set.ofSeq
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt") |> List.ofSeq
 
-        test <@ files = Set.ofList ["a.txt"; "c.txt"] @>
+        test <@ files = [file_a; file_c; file_z] @>
 
-    [<Test>]
-    member _.``ListFilesByExtension in subdirectory`` () =
-        helper.CreateFile_bak("sub/a.txt", "")
-        helper.CreateFile_bak("sub/b.csv", "")
-        helper.CreateFile_bak("sub/c.txt", "")
+    [<TestCase("subdir")>]
+    [<TestCase("sub dir")>]
+    [<TestCase("sub DIR")>]
+    member _.``ListFilesByExtension in subdirectory`` (sub_dir) =
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension("sub", ".txt") |> Seq.map Path.GetFileName |> Set.ofSeq
+        let subDirPath = Path.Combine(base.TestDir, sub_dir)
 
-        test <@ files = Set.ofList ["a.txt"; "c.txt"] @>
+        // note, not in alphabetic order
+        let file_z = helper.CreateFile $"{sub_dir}/z.txt"
+        let file_c = helper.CreateFile $"{sub_dir}/c.csv"
+        let file_a = helper.CreateFile $"{sub_dir}/a.txt"
+
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(subDirPath, ".txt") |> List.ofSeq
+
+        test <@ files = [file_a; file_z] @>
 
     [<Test>]
     member _.``ListFilesByExtension does not recurse into subdirectories`` () =
-        helper.CreateFile_bak("a.txt", "")
-        helper.CreateFile_bak("sub/nested.txt", "")
+        let file_a = helper.CreateFile "a.txt"
+        let _ = helper.CreateFile "sub/nested.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(".", ".txt") |> Seq.map Path.GetFileName |> Set.ofSeq
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt") |> List.ofSeq
 
-        test <@ files = Set.ofList ["a.txt"] @>
+        test <@ files = [file_a] @>
 
     [<Test>]
     member _.``ListFilesByExtension on empty directory returns empty`` () =
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(".", ".txt") |> Seq.toList
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
-        test <@ files = [] @>
+        test <@ Seq.isEmpty files @>
 
     [<Test>]
     member _.``ListFilesByExtension when directory does not exist`` () =
+
+        let directory = Path.Combine(base.TestDir, "not_exist_dir")
+
         raisesWith<DirectoryNotFoundException>
-            <@ base.DirectoryExplorerTools.ListFilesByExtension("not_exist_dir", ".txt") @>
-            (fun ex -> <@ ex.Message = "Directory 'not_exist_dir' does not exist." @>)
+            <@ base.DirectoryExplorerTools.ListFilesByExtension(directory, ".txt") @>
+            (fun ex -> <@ ex.Message = $"Directory '{directory}' does not exist." @>)
 
     [<Test>]
     member _.``ListFilesByExtension with no matching files returns empty`` () =
-        helper.CreateFile_bak("a.csv", "")
-        helper.CreateFile_bak("b.json", "")
+        let _ = helper.CreateFile "a.csv"
+        let _ = helper.CreateFile "b.json"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(".", ".txt") |> Seq.toList
+        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
-        test <@ files = [] @>
-
-    [<Test>]
-    member _.``ListFilesByExtension with different extension`` () =
-        helper.CreateFile_bak("a.csv", "")
-        helper.CreateFile_bak("b.csv", "")
-        helper.CreateFile_bak("c.txt", "")
-
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(".", ".csv") |> Seq.map Path.GetFileName |> Set.ofSeq
-
-        test <@ files = Set.ofList ["a.csv"; "b.csv"] @>
+        test <@ Seq.isEmpty files @>
