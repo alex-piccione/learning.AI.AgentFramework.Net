@@ -6,6 +6,7 @@
   <ItemGroup>
     <Compile Include="data\resource helper.fs" />
     <EmbeddedResource Include="data\openmeteo forecast.response.json" />
+    <Compile Include="tools\Utils.fs" />
     <Compile Include="tools\Helper.fs" />
     <Compile Include="tools\RootFolderTestBase.fs" />
     <Compile Include="tools\RootFolderTestBase_v2.fs" />
