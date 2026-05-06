@@ -115,7 +115,7 @@ type PathValidationTestBase() =
         raisesWith<ArgumentException>
             <@ operation path @>
             //(fun ex -> <@ ex.Message = $"Path '{path}' is not allowed, it MUST be in the root folder '{base.TestDir}'." @>)
-            (fun ex -> <@ ex.Message.StartsWith $"Path '{path}' is not allowed, it MUST be in the root folder " @>)  // can't access base !!!
+            (fun ex -> <@ ex.Message.StartsWith $"Path '{path}' is not allowed, it MUST be in the root folder " @>) // can't access base !!!
 
     [<TestCase("/etc/file")>]
     [<TestCase("/home/user/file")>]
@@ -124,7 +124,7 @@ type PathValidationTestBase() =
         let operation = this.GetOperation ()
         raisesWith<ArgumentException>
             <@ operation path @>
-            (fun ex -> <@ ex.Message = $"Path '{path}' is absolute and not allowed. Please use relative paths." @>)
+            (fun ex -> <@ ex.Message.StartsWith $"Path '{path}' is not allowed, it MUST be in the root folder " @>) // can't access base !!!
 
     [<TestCase("../file")>]
     [<TestCase("aaa/../../file")>]

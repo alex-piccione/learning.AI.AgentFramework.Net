@@ -45,9 +45,9 @@ type RootFolderToolsBase_v2 (logger, rootFolderPath:string) =
         if path.Contains("\0") then
             raise (UnauthorizedAccessException($"Path '{path}' contains a null byte."))
 
-        let path = normalizePath path
+        let normalizedPath = normalizePath path
 
-        if not (path.StartsWith(rootFolder)) then
+        if not (normalizedPath.StartsWith(rootFolder)) then
             raise (ArgumentException($"Path '{path}' is not allowed, it MUST be in the root folder '{rootFolder}'."))
 
 
