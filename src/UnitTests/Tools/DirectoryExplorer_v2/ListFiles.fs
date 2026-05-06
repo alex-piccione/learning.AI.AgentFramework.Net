@@ -6,8 +6,6 @@ open NUnit.Framework
 open Swensen.Unquote
 
 open RootFolderTestBase_v2
-open Utils
-open PathNormalizer
 
 type ListFiles () =
     inherit PathValidationTestBase()
@@ -39,16 +37,12 @@ type ListFiles () =
     member _.``ListFiles in subdirectory`` (dirName) =
 
         let sub_dir = Path.Combine(base.TestDir, dirName)
-        let file_a = Path.Combine(sub_dir, "a.txt")
-        let file_b = Path.Combine(sub_dir, "b.txt")
-        helper.CreateFile_bak(file_a,"")
-        File.WriteAllText(file_b,"")
+        let file_a = helper.CreateFile (Path.Combine(sub_dir, "a.txt"))
+        let file_b = helper.CreateFile (Path.Combine(sub_dir, "b.txt"))
 
-        let files = base.DirectoryExplorerTools.ListFiles(sub_dir)
+        let files = base.DirectoryExplorerTools.ListFiles(sub_dir) |> Seq.toList
 
-        test <@ files = [(asWin file_a); (asWin file_b)] @>
-        test <@ files |> Seq.contains (asWin file_a) @>
-        test <@ files |> Seq.contains (asWin file_b) @>
+        test <@ files = [file_a; file_b] @>
 
     [<Test>]
     member _.``ListFiles does not recurse into subdirectories`` () =

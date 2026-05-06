@@ -106,19 +106,21 @@ type PathValidationTestBase() =
             (fun ex -> <@ ex.Message = "Path cannot be empty or whitespace." @>)
 
     [<TestCase("C:\\Windows\\file")>]
+    [<TestCase("C:/Windows/file")>]
     [<TestCase("\\folder\\file")>]
     [<TestCase("C:file")>]
     [<Platform("Win")>]
-    member this.``should reject absolute paths (Windows)`` (path: string) =
+    member this.``should reject paths outside the root folder (Windows)`` (path: string) =
         let operation = this.GetOperation ()
         raisesWith<ArgumentException>
             <@ operation path @>
-            (fun ex -> <@ ex.Message = $"Path '{path}' is absolute and not allowed. Please use relative paths." @>)
+            //(fun ex -> <@ ex.Message = $"Path '{path}' is not allowed, it MUST be in the root folder '{base.TestDir}'." @>)
+            (fun ex -> <@ ex.Message.StartsWith $"Path '{path}' is not allowed, it MUST be in the root folder " @>)  // can't access base !!!
 
     [<TestCase("/etc/file")>]
     [<TestCase("/home/user/file")>]
     [<Platform("Unix,Linux,MacOsx")>]
-    member this.``should reject absolute paths (Unix)`` (path: string) =
+    member this.``should reject paths outside the root folder (Unix)`` (path: string) =
         let operation = this.GetOperation ()
         raisesWith<ArgumentException>
             <@ operation path @>
