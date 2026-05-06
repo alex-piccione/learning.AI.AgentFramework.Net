@@ -63,8 +63,8 @@ type DirectoryExplorerTools_v2 (logger:ILogger, rootFolder:string) =
    
         let rec traverse dir =
             for subDir in Directory.GetDirectories(dir) do
-                items <- subDir::items
+                items <- normalizePath(subDir)::items
                 traverse subDir
     
         traverse rootFolder 
-        items
+        items |> List.sort

@@ -43,6 +43,18 @@ type Helper (rootPath:string) =
 
         normalizePath filePath
 
+    /// dirPath can be absolute or relative to the root folder
+    /// It returns a normalized path
+    member _.CreateDir(dirPath:string) =
+
+        let dirPath =
+            if Path.IsPathRooted dirPath then dirPath
+            else Path.Combine(rootPath, dirPath)
+
+        Directory.CreateDirectory dirPath |> ignore
+
+        normalizePath dirPath
+
 /// Helper module providing common test infrastructure
 module TestHelpers =
 
