@@ -25,4 +25,4 @@ jobs:
     - name: 🧪 Run Tests
       run: |
         dotnet test src/ -c Release --no-restore \
-          --filter "TestCategory!=SKIP_ON_DEPLOY" & TestCategory!=REQUIRES_API_KEY" \"
+          --filter "TestCategory!=SKIP_ON_DEPLOY" & TestCategory!=REQUIRES_API_KEY"
