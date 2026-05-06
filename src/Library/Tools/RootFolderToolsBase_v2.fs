@@ -30,13 +30,8 @@ type RootFolderToolsBase_v2 (logger, rootFolderPath:string) =
 
     member __.ValidatePath (path: string) =
 
-        let path = normalizePath path
-
         if String.IsNullOrWhiteSpace(path) then
             raise (ArgumentException("Path cannot be empty or whitespace."))
-
-        if not (path.StartsWith(rootFolder)) then
-            raise (ArgumentException($"Path '{path}' is not allowed, it MUST be in the root folder '{rootFolder}'."))
 
         // Reject URL-encoded characters (e.g. %2e%2e → ..)
         if path.Contains("%") then
@@ -46,5 +41,13 @@ type RootFolderToolsBase_v2 (logger, rootFolderPath:string) =
         if path.Contains("..") then
             raise (UnauthorizedAccessException($"Path '{path}' is not allowed."))
 
-        if path.Contains("\0") then // null byte
+        // Check for null byte
+        if path.Contains("\0") then
             raise (UnauthorizedAccessException($"Path '{path}' contains a null byte."))
+
+        let path = normalizePath path
+
+        if not (path.StartsWith(rootFolder)) then
+            raise (ArgumentException($"Path '{path}' is not allowed, it MUST be in the root folder '{rootFolder}'."))
+
+

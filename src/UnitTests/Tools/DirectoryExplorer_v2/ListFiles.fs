@@ -7,6 +7,7 @@ open Swensen.Unquote
 
 open RootFolderTestBase_v2
 open Utils
+open PathNormalizer
 
 type ListFiles () =
     inherit PathValidationTestBase()
@@ -25,15 +26,12 @@ type ListFiles () =
 
     [<Test>]
     member _.``ListFiles in root`` () =
-        //let file_a = Path.Combine(base.TestDir, "a.txt")
-        //let file_b = Path.Combine(base.TestDir, "b.txt")
         let file_a = helper.CreateFile("a.txt")
         let file_b = helper.CreateFile("b.txt")
         
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir)
+        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> List.ofSeq
 
-        test <@ files |> Seq.contains (asWin file_a) @>
-        test <@ files |> Seq.contains (asWin file_b) @>
+        test <@ files = [file_a; file_b] @>
 
     [<TestCase("dir")>]
     [<TestCase("sub dir")>]
@@ -63,13 +61,16 @@ type ListFiles () =
 
     [<Test>]
     member _.``ListFiles on empty directory returns empty`` () =
-        let files = base.DirectoryExplorerTools.ListFiles(".") |> Seq.toList
+        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir)
 
-        test <@ files = [] @>
+        test <@ Seq.isEmpty files @>
 
     [<Test>]
     member _.``ListFiles when directory does not exist`` () =
+
+        let directory = Path.Combine(base.TestDir, "not_exist_dir")
+
         raisesWith<DirectoryNotFoundException>
-            <@ base.DirectoryExplorerTools.ListFiles("not_exist_dir") @>
-            (fun ex -> <@ ex.Message = "Directory 'not_exist_dir' does not exist." @>)
+            <@ base.DirectoryExplorerTools.ListFiles directory @>
+            (fun ex -> <@ ex.Message = $"Directory '{directory}' does not exist." @>)
 

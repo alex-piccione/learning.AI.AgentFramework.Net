@@ -24,6 +24,7 @@ type Helper (rootPath:string) =
         stream.Write(bytes, 0, bytes.Length)
 
     /// filePath can be absolute or relative to the root folder
+    /// It returns a normalized path
     member _.CreateFile(filePath:string, ?content:string) =
 
         let filePath =
