@@ -55,13 +55,11 @@ type ListFiles () =
     [<Test>]
     member _.``ListFiles does not recurse into subdirectories`` () =
         let file_a = helper.CreateFile("a.txt")
-        let file_b = helper.CreateFile("sub/nested.txt")
+        let _ = helper.CreateFile("sub/nested.txt")
 
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir)
+        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> Seq.toList
 
-        let a = seq [file_a]
-
-        test <@ files = a @>
+        test <@ files = [file_a] @>
 
     [<Test>]
     member _.``ListFiles on empty directory returns empty`` () =
