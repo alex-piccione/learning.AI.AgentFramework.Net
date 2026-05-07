@@ -54,7 +54,7 @@ type FilesManagerAgent_v2 (agent:AIAgent, clientWrapper:ClientWrapper) =
             ) :> AITool
 
         asList [
-           DirectoryExplorerTools_v2(logger, unixRootFolder).GetTools()
+           FileExplorerTools(logger, unixRootFolder).GetTools()
            //FileManagerTools(logger, rootFolder).GetTools()
            [|rootFolderTool|]
         ]

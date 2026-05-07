@@ -22,8 +22,7 @@
     <Compile Include="Tools\Models\Kraken.models.fs" />
     <Compile Include="Tools\ToolsBase.fs" />
     <Compile Include="Tools\RootFolderToolsBase.fs" />
-    <Compile Include="Tools\RootFolderToolsBase_v2.fs" />
-    <Compile Include="Tools\DirectoryExplorerTools_v2.fs" />
+    <Compile Include="Tools\FileExplorerTools.fs" />
     <Compile Include="Tools\FileManagerTools.fs" />
     <Compile Include="Tools\WiseTools.fs" />
     <Compile Include="Tools\KrakenTools.fs" />

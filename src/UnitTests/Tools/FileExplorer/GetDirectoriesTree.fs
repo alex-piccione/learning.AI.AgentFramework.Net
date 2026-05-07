@@ -5,7 +5,7 @@ open System.IO
 open NUnit.Framework
 open Swensen.Unquote
 
-open RootFolderTestBase_v2
+open RootFolderTestBase
 
 type GetTreeOfDirectories () =
     inherit TestBase()
@@ -55,6 +55,6 @@ type GetTreeOfDirectories () =
         let _ = helper.CreateFile (Path.Combine(dirPath, "README.md"))
         let _ = helper.CreateFile (Path.Combine(base.TestDir, "README.md"))
 
-        let result = base.DirectoryExplorerTools.GetDirectoriesTree dirPath
+        let result = base.FileExplorerTools.GetDirectoriesTree dirPath
 
         test <@ result = [dirPath] @>

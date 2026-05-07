@@ -24,9 +24,8 @@ type ReadFile () =
 
     [<Test>]
     member _.``ReadFile in root`` () =
-        let file = "aaa.txt"
         let expectedContent = "This is the content of the file."
-        helper.CreateFile(file, expectedContent)
+        let file = helper.CreateFile("aaa.txt", expectedContent)
 
         // Execute
         let content = base.FileManagerTools.ReadFile(file)
@@ -35,9 +34,8 @@ type ReadFile () =
 
     [<Test>]
     member _.``ReadFile in subdirectory`` () =
-        let file = "aaa/bbb.txt"
         let expectedContent = "This is the content of the file."
-        helper.CreateFile(file, expectedContent)
+        let file = helper.CreateFile("aaa/bbb.txt", expectedContent)
 
         // Execute
         let content = base.FileManagerTools.ReadFile(file)

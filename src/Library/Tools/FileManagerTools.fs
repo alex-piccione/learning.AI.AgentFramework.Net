@@ -7,7 +7,7 @@ open System.Threading.Tasks
 open Microsoft.Extensions.Logging
 
 type FileManagerTools (logger:ILogger, rootFolder:string) =
-    inherit RootFolderToolsBase_v2(logger, rootFolder)
+    inherit RootFolderToolsBase(logger, rootFolder)
 
     [<Description("Reads the content of a file as text. Provide the absolute file path.")>]
     member this.ReadFile(
