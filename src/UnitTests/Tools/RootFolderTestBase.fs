@@ -7,20 +7,42 @@ open Microsoft.Extensions.Logging.Testing;
 open Swensen.Unquote
 open Tools
 
-/// Helper type for creating test files
+/// Helper  for creating test files
 type Helper (rootPath:string) =
 
-    member _.CreateFile(file, content:string) =
-        let fullPath = Path.Combine(rootPath, file)
-        let directory = Path.GetDirectoryName fullPath
+    let normalizePath (path:string) = path.Replace("\\", "/")
+
+    /// filePath can be absolute or relative to the root folder
+    /// It returns a normalized path
+    member _.CreateFile(filePath:string, ?content:string) =
+
+        let filePath =
+            if Path.IsPathRooted filePath then filePath
+            else Path.Combine(rootPath, filePath)
+
+        let directory = Path.GetDirectoryName (Path.Combine(rootPath, filePath))
         match directory with
         | null -> ()
         | dir when not (String.IsNullOrWhiteSpace dir) && not (Directory.Exists dir) ->
             Directory.CreateDirectory dir |> ignore
         | _ -> ()
-        use stream = File.Create (fullPath)
-        let bytes = Text.Encoding.UTF8.GetBytes(content)
+        use stream = File.Create (filePath)
+        let bytes = Text.Encoding.UTF8.GetBytes(content |> Option.defaultValue "")
         stream.Write(bytes, 0, bytes.Length)
+
+        normalizePath filePath
+
+    /// dirPath can be absolute or relative to the root folder
+    /// It returns a normalized path
+    member _.CreateDir(dirPath:string) =
+
+        let dirPath =
+            if Path.IsPathRooted dirPath then dirPath
+            else Path.Combine(rootPath, dirPath)
+
+        Directory.CreateDirectory dirPath |> ignore
+
+        normalizePath dirPath
 
 /// Helper module providing common test infrastructure
 module TestHelpers =
@@ -31,7 +53,7 @@ module TestHelpers =
         let testDir = Path.Combine(Path.GetTempPath(), $"Test_DirectoryExplorerTools_{Guid.NewGuid().ToString()[..6]}")
         Console.WriteLine($"Test dir: {testDir}")
         Directory.CreateDirectory(testDir) |> ignore
-        let directoryExplorerTools = DirectoryExplorerTools(logger, testDir)
+        let directoryExplorerTools = FileExplorerTools(logger, testDir)
         let fileManagerTools = FileManagerTools(logger, testDir)
         (testDir, directoryExplorerTools, fileManagerTools)
 
@@ -46,20 +68,20 @@ module TestHelpers =
 type TestBase() =
 
     let mutable testDir = ""
-    let mutable directoryExplorerTools = Unchecked.defaultof<DirectoryExplorerTools>
+    let mutable fileExplorerTools = Unchecked.defaultof<FileExplorerTools>
     let mutable fileManagerTools = Unchecked.defaultof<FileManagerTools>
 
     member _.TestDir = testDir
-    member _.DirectoryExplorerTools = directoryExplorerTools
+    member _.FileExplorerTools = fileExplorerTools
     member _.FileManagerTools = fileManagerTools
 
     [<SetUp>]
     member this.Setup() =
-        let (dir, directoryExplorerTools_, fileManagerTools_) = TestHelpers.createTestEnvironment ()
+        let (dir, fileExplorerTools_, fileManagerTools_) = TestHelpers.createTestEnvironment ()
         testDir <- dir
-        directoryExplorerTools <- directoryExplorerTools_
+        fileExplorerTools <- fileExplorerTools_
         fileManagerTools <- fileManagerTools_
-    
+
     [<TearDown>]
     member this.Teardown() =
         TestHelpers.cleanupTestEnvironment testDir
@@ -85,23 +107,25 @@ type PathValidationTestBase() =
             (fun ex -> <@ ex.Message = "Path cannot be empty or whitespace." @>)
 
     [<TestCase("C:\\Windows\\file")>]
+    [<TestCase("C:/Windows/file")>]
     [<TestCase("\\folder\\file")>]
     [<TestCase("C:file")>]
     [<Platform("Win")>]
-    member this.``should reject absolute paths (Windows)`` (path: string) =
+    member this.``should reject paths outside the root folder (Windows)`` (path: string) =
         let operation = this.GetOperation ()
         raisesWith<ArgumentException>
             <@ operation path @>
-            (fun ex -> <@ ex.Message = $"Path '{path}' is absolute and not allowed. Please use relative paths." @>)
+            //(fun ex -> <@ ex.Message = $"Path '{path}' is not allowed, it MUST be in the root folder '{base.TestDir}'." @>)
+            (fun ex -> <@ ex.Message.StartsWith $"Path '{path}' is not allowed, it MUST be in the root folder " @>) // can't access base !!!
 
     [<TestCase("/etc/file")>]
     [<TestCase("/home/user/file")>]
     [<Platform("Unix,Linux,MacOsx")>]
-    member this.``should reject absolute paths (Unix)`` (path: string) =
+    member this.``should reject paths outside the root folder (Unix)`` (path: string) =
         let operation = this.GetOperation ()
         raisesWith<ArgumentException>
             <@ operation path @>
-            (fun ex -> <@ ex.Message = $"Path '{path}' is absolute and not allowed. Please use relative paths." @>)
+            (fun ex -> <@ ex.Message.StartsWith $"Path '{path}' is not allowed, it MUST be in the root folder " @>) // can't access base !!!
 
     [<TestCase("../file")>]
     [<TestCase("aaa/../../file")>]

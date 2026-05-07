@@ -8,12 +8,9 @@
     <EmbeddedResource Include="data\openmeteo forecast.response.json" />
     <Compile Include="Tools\Utils.fs" />
     <Compile Include="Tools\RootFolderTestBase.fs" />
-    <Compile Include="Tools\RootFolderTestBase_v2.fs" />
-    <Compile Include="Tools\DirectoryExplorer\ListFiles.fs" />
-    <Compile Include="Tools\DirectoryExplorer\GetTree.fs" />
-    <Compile Include="Tools\DirectoryExplorer_v2\ListFiles.fs" />
-    <Compile Include="Tools\DirectoryExplorer_v2\ListFilesByExtension.fs" />
-    <Compile Include="Tools\DirectoryExplorer_v2\GetDirectoriesTree.fs" />
+    <Compile Include="Tools\FileExplorer\ListFiles.fs" />
+    <Compile Include="Tools\FileExplorer\ListFilesByExtension.fs" />
+    <Compile Include="Tools\FileExplorer\GetDirectoriesTree.fs" />
     <Compile Include="Tools\FileManager\ReadFile.fs" />
     <Compile Include="Tools\FileManager\WriteFile.test.fs" />
     <Compile Include="Tools\OpenMeteo.test.fs" />

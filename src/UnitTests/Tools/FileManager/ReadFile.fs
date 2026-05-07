@@ -24,9 +24,8 @@ type ReadFile () =
 
     [<Test>]
     member _.``ReadFile in root`` () =
-        let file = "aaa.txt"
         let expectedContent = "This is the content of the file."
-        helper.CreateFile(file, expectedContent)
+        let file = helper.CreateFile("aaa.txt", expectedContent)
 
         // Execute
         let content = base.FileManagerTools.ReadFile(file)
@@ -35,9 +34,8 @@ type ReadFile () =
 
     [<Test>]
     member _.``ReadFile in subdirectory`` () =
-        let file = "aaa/bbb.txt"
         let expectedContent = "This is the content of the file."
-        helper.CreateFile(file, expectedContent)
+        let file = helper.CreateFile("aaa/bbb.txt", expectedContent)
 
         // Execute
         let content = base.FileManagerTools.ReadFile(file)
@@ -45,7 +43,26 @@ type ReadFile () =
         test <@ content = expectedContent @>
 
     [<Test>]
+    member _.``ReadFile handles file name with spaces`` () =
+        let expectedContent = "Content with spaces in path."
+        let file = helper.CreateFile("my file.txt", expectedContent)
+
+        let content = base.FileManagerTools.ReadFile(file)
+
+        test <@ content = expectedContent @>
+
+    [<Test>]
+    member _.``ReadFile in subdirectory with spaces`` () =
+        let expectedContent = "Nested with spaces."
+        let file = helper.CreateFile("sub dir/my file.txt", expectedContent)
+
+        let content = base.FileManagerTools.ReadFile(file)
+
+        test <@ content = expectedContent @>
+
+    [<Test>]
     member _.``ReadFile when file does not exist`` () =
+        let fullPath = Path.Combine(base.TestDir, "not_exist.txt")
         raisesWith<FileNotFoundException>
-            <@ base.FileManagerTools.ReadFile("not_exist.txt") @>
-            (fun ex -> <@ ex.Message = "File 'not_exist.txt' does not exist." @>)
+            <@ base.FileManagerTools.ReadFile(fullPath) @>
+            (fun ex -> <@ ex.Message = $"File '{fullPath}' does not exist." @>)

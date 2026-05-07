@@ -19,12 +19,6 @@ type AgentFactory(aiAgentCreator:AIAgentCreator, toolsProvider:ToolsProvider) =
         return FilesManagerAgent_v2(aiAgent, clientWrapper)
     }
 
-    member this.CreateFilesManagerAgent_v1(logger, clientWrapper:ClientWrapper, rootFolder): Task<FilesManagerAgent> = task {
-        let tools = FilesManagerAgent.CreateTools(logger, rootFolder)
-        let! aiAgent = aiAgentCreator.Create(FilesManagerAgent.Definition, clientWrapper.ChatClient, tools)
-        return FilesManagerAgent(aiAgent, clientWrapper)
-    }
-
     member _.CreateWeatherAgent(clientWrapper) =
         WeatherAgent("Weather Agent", clientWrapper, toolsProvider)
 

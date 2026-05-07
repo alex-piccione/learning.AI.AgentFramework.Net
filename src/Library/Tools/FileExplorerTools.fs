@@ -6,8 +6,8 @@ open System.IO
 open Microsoft.Extensions.Logging
 open PathNormalizer
 
-type DirectoryExplorerTools_v2 (logger:ILogger, rootFolder:string) =
-    inherit RootFolderToolsBase_v2(logger, rootFolder)
+type FileExplorerTools (logger:ILogger, rootFolder:string) =
+    inherit RootFolderToolsBase(logger, rootFolder)
 
     [<Description("List all the files in the given directory.")>]
     member this.ListFiles(

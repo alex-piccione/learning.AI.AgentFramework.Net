@@ -5,7 +5,7 @@ open System.IO
 open NUnit.Framework
 open Swensen.Unquote
 
-open RootFolderTestBase_v2
+open RootFolderTestBase
 
 type ListFilesByExtension () =
     inherit PathValidationTestBase()
@@ -16,7 +16,7 @@ type ListFilesByExtension () =
         Set.ofSeq s1 = Set.ofSeq s2
 
     override this.GetOperation () =
-        let tools = base.DirectoryExplorerTools
+        let tools = base.FileExplorerTools
         fun path -> tools.ListFilesByExtension(path, ".txt") |> Seq.length |> ignore
 
     [<SetUp>]
@@ -33,7 +33,7 @@ type ListFilesByExtension () =
         let file_b = helper.CreateFile "b.csv"
         let file_c = helper.CreateFile "c.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
+        let files = base.FileExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
         test <@ Set.ofSeq files = Set.ofList [file_a; file_c; file_z] @>
 
@@ -49,22 +49,32 @@ type ListFilesByExtension () =
         let file_c = helper.CreateFile $"{sub_dir}/c.csv"
         let file_a = helper.CreateFile $"{sub_dir}/a.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(subDirPath, ".txt")
+        let files = base.FileExplorerTools.ListFilesByExtension(subDirPath, ".txt")
 
         test <@ sameSequence files [file_a; file_z] @>
+
+    [<Test>]
+    member _.``ListFilesByExtension handles file names with spaces`` () =
+        let file_a = helper.CreateFile "my file.txt"
+        let file_b = helper.CreateFile "another file.txt"
+        let file_c = helper.CreateFile "no match.csv"
+
+        let files = base.FileExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
+
+        test <@ sameSequence files [file_a; file_b] @>
 
     [<Test>]
     member _.``ListFilesByExtension does not recurse into subdirectories`` () =
         let file_a = helper.CreateFile "a.txt"
         let _ = helper.CreateFile "sub/nested.txt"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
+        let files = base.FileExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
         test <@ sameSequence files [file_a] @>
 
     [<Test>]
     member _.``ListFilesByExtension on empty directory returns empty`` () =
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
+        let files = base.FileExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
         test <@ Seq.isEmpty files @>
 
@@ -74,7 +84,7 @@ type ListFilesByExtension () =
         let directory = Path.Combine(base.TestDir, "not_exist_dir")
 
         raisesWith<DirectoryNotFoundException>
-            <@ base.DirectoryExplorerTools.ListFilesByExtension(directory, ".txt") @>
+            <@ base.FileExplorerTools.ListFilesByExtension(directory, ".txt") @>
             (fun ex -> <@ ex.Message = $"Directory '{directory}' does not exist." @>)
 
     [<Test>]
@@ -82,6 +92,6 @@ type ListFilesByExtension () =
         let _ = helper.CreateFile "a.csv"
         let _ = helper.CreateFile "b.json"
 
-        let files = base.DirectoryExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
+        let files = base.FileExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
 
         test <@ Seq.isEmpty files @>

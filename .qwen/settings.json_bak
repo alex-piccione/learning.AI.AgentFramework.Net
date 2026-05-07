@@ -1,0 +1,21 @@
+{
+  "memory": {
+    "enableManagedAutoMemory": false,
+    "enableManagedAutoDream": false
+  },
+  "fastModel": "",
+  "experimental": {
+    "emitToolUseSummaries": false
+  },
+  "ui": {
+    "enableFollowupSuggestions": false
+  },
+  "systemPrompt": "You are a helpful coding assistant.",
+  "tools": {
+    "sandbox": false
+  },
+  "permissions": {
+    "deny": ["WebFetch", "monitor", "TodoWrite"]
+  },
+  "$version": 3
+}

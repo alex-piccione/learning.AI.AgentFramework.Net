@@ -22,9 +22,7 @@
     <Compile Include="Tools\Models\Kraken.models.fs" />
     <Compile Include="Tools\ToolsBase.fs" />
     <Compile Include="Tools\RootFolderToolsBase.fs" />
-    <Compile Include="Tools\RootFolderToolsBase_v2.fs" />
-    <Compile Include="Tools\DirectoryExplorerTools.fs" />
-    <Compile Include="Tools\DirectoryExplorerTools_v2.fs" />
+    <Compile Include="Tools\FileExplorerTools.fs" />
     <Compile Include="Tools\FileManagerTools.fs" />
     <Compile Include="Tools\WiseTools.fs" />
     <Compile Include="Tools\KrakenTools.fs" />
@@ -38,8 +36,7 @@
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\IAgent.fs" />
     <Compile Include="Agents\AIAgentCreator.fs" />
-    <Compile Include="Agents\FilesManagerAgent.fs" />
-    <Compile Include="Agents\FilesManagerAgent_v2.fs" />
+    <Compile Include="Agents\FileSystemAgent.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />
     <Compile Include="Agents\ExpensesAgent.fs" />

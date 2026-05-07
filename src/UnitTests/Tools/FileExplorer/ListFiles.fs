@@ -5,7 +5,7 @@ open System.IO
 open NUnit.Framework
 open Swensen.Unquote
 
-open RootFolderTestBase_v2
+open RootFolderTestBase
 
 type ListFiles () =
     inherit PathValidationTestBase()
@@ -13,7 +13,7 @@ type ListFiles () =
     let mutable helper = Helper("")
 
     override this.GetOperation () =
-        let tools = base.DirectoryExplorerTools
+        let tools = base.FileExplorerTools
         fun path -> tools.ListFiles(path) |> ignore
 
     [<SetUp>]
@@ -27,7 +27,7 @@ type ListFiles () =
         let file_a = helper.CreateFile("a.txt")
         let file_b = helper.CreateFile("b.txt")
         
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
+        let files = base.FileExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
 
         test <@ files = Set.ofSeq [file_a; file_b] @>
 
@@ -40,7 +40,16 @@ type ListFiles () =
         let file_a = helper.CreateFile (Path.Combine(sub_dir, "a.txt"))
         let file_b = helper.CreateFile (Path.Combine(sub_dir, "b.txt"))
 
-        let files = base.DirectoryExplorerTools.ListFiles(sub_dir) |> Set.ofSeq
+        let files = base.FileExplorerTools.ListFiles(sub_dir) |> Set.ofSeq
+
+        test <@ files = Set.ofSeq [file_a; file_b] @>
+
+    [<Test>]
+    member _.``ListFiles handles file names with spaces`` () =
+        let file_a = helper.CreateFile("my file.txt")
+        let file_b = helper.CreateFile("a file with spaces.dat")
+
+        let files = base.FileExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
 
         test <@ files = Set.ofSeq [file_a; file_b] @>
 
@@ -49,13 +58,13 @@ type ListFiles () =
         let file_a = helper.CreateFile("a.txt")
         let _ = helper.CreateFile("sub/nested.txt")
 
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
+        let files = base.FileExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
 
         test <@ files = Set.ofList [file_a] @>
 
     [<Test>]
     member _.``ListFiles on empty directory returns empty`` () =
-        let files = base.DirectoryExplorerTools.ListFiles(base.TestDir)
+        let files = base.FileExplorerTools.ListFiles(base.TestDir)
 
         test <@ Seq.isEmpty files @>
 
@@ -65,6 +74,6 @@ type ListFiles () =
         let directory = Path.Combine(base.TestDir, "not_exist_dir")
 
         raisesWith<DirectoryNotFoundException>
-            <@ base.DirectoryExplorerTools.ListFiles directory @>
+            <@ base.FileExplorerTools.ListFiles directory @>
             (fun ex -> <@ ex.Message = $"Directory '{directory}' does not exist." @>)
 
