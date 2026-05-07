@@ -12,17 +12,6 @@ type Helper (rootPath:string) =
 
     let normalizePath (path:string) = path.Replace("\\", "/")
 
-    member _.CreateFile_bak(filePath:string, content:string) =
-        let directory = Path.GetDirectoryName filePath
-        match directory with
-        | null -> ()
-        | dir when not (String.IsNullOrWhiteSpace dir) && not (Directory.Exists dir) ->
-            Directory.CreateDirectory dir |> ignore
-        | _ -> ()
-        use stream = File.Create (filePath)
-        let bytes = Text.Encoding.UTF8.GetBytes(content)
-        stream.Write(bytes, 0, bytes.Length)
-
     /// filePath can be absolute or relative to the root folder
     /// It returns a normalized path
     member _.CreateFile(filePath:string, ?content:string) =
