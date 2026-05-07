@@ -48,6 +48,28 @@ type WriteTextFile () =
         test <@ actualContent = content @>
 
     [<Test>]
+    member this.``WriteTextFile creates new file with spaces in name`` () =
+        let filePath = Path.Combine(base.TestDir, "my new file.txt")
+        let content = "Content with spaces in filename."
+
+        base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
+
+        test <@ File.Exists filePath @>
+        let actualContent = File.ReadAllText filePath
+        test <@ actualContent = content @>
+
+    [<Test>]
+    member this.``WriteTextFile creates new file in directory with spaces`` () =
+        let filePath = Path.Combine(base.TestDir, "sub dir/nested/my file.txt")
+        let content = "Nested content with spaces."
+
+        base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
+
+        test <@ File.Exists filePath @>
+        let actualContent = File.ReadAllText filePath
+        test <@ actualContent = content @>
+
+    [<Test>]
     member _.``WriteTextFile overwrites existing file`` () =
         let filePath = Path.Combine(base.TestDir, "existing.txt")
         let initialContent = "Initial content."

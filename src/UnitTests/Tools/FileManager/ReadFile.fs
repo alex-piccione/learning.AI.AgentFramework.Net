@@ -43,6 +43,24 @@ type ReadFile () =
         test <@ content = expectedContent @>
 
     [<Test>]
+    member _.``ReadFile handles file name with spaces`` () =
+        let expectedContent = "Content with spaces in path."
+        let file = helper.CreateFile("my file.txt", expectedContent)
+
+        let content = base.FileManagerTools.ReadFile(file)
+
+        test <@ content = expectedContent @>
+
+    [<Test>]
+    member _.``ReadFile in subdirectory with spaces`` () =
+        let expectedContent = "Nested with spaces."
+        let file = helper.CreateFile("sub dir/my file.txt", expectedContent)
+
+        let content = base.FileManagerTools.ReadFile(file)
+
+        test <@ content = expectedContent @>
+
+    [<Test>]
     member _.``ReadFile when file does not exist`` () =
         let fullPath = Path.Combine(base.TestDir, "not_exist.txt")
         raisesWith<FileNotFoundException>

@@ -2,7 +2,8 @@
 
 ## In Progress
 
-[ ] Files Manager. Add tests for spaces in file and directory name 
+
+ 
 
 
 ## Backlog

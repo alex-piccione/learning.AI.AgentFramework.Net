@@ -54,6 +54,16 @@ type ListFilesByExtension () =
         test <@ sameSequence files [file_a; file_z] @>
 
     [<Test>]
+    member _.``ListFilesByExtension handles file names with spaces`` () =
+        let file_a = helper.CreateFile "my file.txt"
+        let file_b = helper.CreateFile "another file.txt"
+        let file_c = helper.CreateFile "no match.csv"
+
+        let files = base.FileExplorerTools.ListFilesByExtension(base.TestDir, ".txt")
+
+        test <@ sameSequence files [file_a; file_b] @>
+
+    [<Test>]
     member _.``ListFilesByExtension does not recurse into subdirectories`` () =
         let file_a = helper.CreateFile "a.txt"
         let _ = helper.CreateFile "sub/nested.txt"

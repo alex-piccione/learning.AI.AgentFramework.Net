@@ -45,6 +45,15 @@ type ListFiles () =
         test <@ files = Set.ofSeq [file_a; file_b] @>
 
     [<Test>]
+    member _.``ListFiles handles file names with spaces`` () =
+        let file_a = helper.CreateFile("my file.txt")
+        let file_b = helper.CreateFile("a file with spaces.dat")
+
+        let files = base.FileExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
+
+        test <@ files = Set.ofSeq [file_a; file_b] @>
+
+    [<Test>]
     member _.``ListFiles does not recurse into subdirectories`` () =
         let file_a = helper.CreateFile("a.txt")
         let _ = helper.CreateFile("sub/nested.txt")
