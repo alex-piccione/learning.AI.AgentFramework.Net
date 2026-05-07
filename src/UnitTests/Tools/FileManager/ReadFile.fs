@@ -44,6 +44,7 @@ type ReadFile () =
 
     [<Test>]
     member _.``ReadFile when file does not exist`` () =
+        let fullPath = Path.Combine(base.TestDir, "not_exist.txt")
         raisesWith<FileNotFoundException>
-            <@ base.FileManagerTools.ReadFile("not_exist.txt") @>
-            (fun ex -> <@ ex.Message = "File 'not_exist.txt' does not exist." @>)
+            <@ base.FileManagerTools.ReadFile(fullPath) @>
+            (fun ex -> <@ ex.Message = $"File '{fullPath}' does not exist." @>)
