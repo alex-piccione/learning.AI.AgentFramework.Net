@@ -12,7 +12,7 @@ type FilesManagerAgent_v2 (agent:AIAgent, clientWrapper:ClientWrapper) =
     inherit ChatAgentBase(agent, clientWrapper)
 
     static let definition:AgentDefinition = {
-        Name="Files Manager"
+        Name="File System"
         Description = "Expert at inventorying, counting, and managing files/directories within a specific root folder."
         Instructions = $"""
             - CORE RULE: You only have access to the path returned by 'GetRootFolder' (the ROOT FOLDER).

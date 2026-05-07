@@ -10,13 +10,14 @@
 
 [ ] Try to optimize Files Manager v1.
 [ ] Files Manager. Builder strategy to be able to add multiple Files Manager.
-[ ] DeepSeek custom chat options to solve the error:
+[ ] Local Ollama thinking mode error:
+    When using models like deepseek-r1 or granite4.1 locally via Ollama that produce thinking/reasoning tokens,
+    OllamaSharp client fails with:
     System.ClientModel.ClientResultException: HTTP 400 (invalid_request_error: invalid_request_error)
     The `reasoning_content` in the thinking mode must be passed back to the API.
+    → Need to strip or preserve `reasoning_content` in chat history.
 
 [ ] granite4.1:8b returns use the tools correctly, but its response is an "interpretation" of the command instead of the actual result.
-
-[ ] Add Ollama option for context window size
 
 [ ] Finish to see simple introductory: https://www.aihero.dev/what-is-the-context-window
 
