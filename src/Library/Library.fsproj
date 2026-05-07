@@ -36,7 +36,6 @@
     <Compile Include="Agents\Settings\Cryptocurrency.fs" />
     <Compile Include="Agents\IAgent.fs" />
     <Compile Include="Agents\AIAgentCreator.fs" />
-    <Compile Include="Agents\FilesManagerAgent.fs" />
     <Compile Include="Agents\FilesManagerAgent_v2.fs" />
     <Compile Include="Agents\WeatherAgent.fs" />
     <Compile Include="Agents\CryptocurrencyAgent.fs" />

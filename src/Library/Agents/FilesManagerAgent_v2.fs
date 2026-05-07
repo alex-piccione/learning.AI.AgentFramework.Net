@@ -13,7 +13,6 @@ type FilesManagerAgent_v2 (agent:AIAgent, clientWrapper:ClientWrapper) =
 
     static let definition:AgentDefinition = {
         Name="Files Manager"
-        //Description="Provides inventory, counts and management for file and directories of the specified root folder."
         Description = "Expert at inventorying, counting, and managing files/directories within a specific root folder."
         Instructions = $"""
             - CORE RULE: You only have access to the path returned by 'GetRootFolder' (the ROOT FOLDER).
@@ -25,10 +24,6 @@ type FilesManagerAgent_v2 (agent:AIAgent, clientWrapper:ClientWrapper) =
         """
     }
 
-    (*
-    - PATHS:
-      - Always use forward slashes (/) for tool arguments.
-    *)
 
     let mutable tools = Unchecked.defaultof<AITool list>
 
