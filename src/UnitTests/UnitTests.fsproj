@@ -11,7 +11,6 @@
     <Compile Include="Tools\FileExplorer\ListFiles.fs" />
     <Compile Include="Tools\FileExplorer\ListFilesByExtension.fs" />
     <Compile Include="Tools\FileExplorer\GetDirectoriesTree.fs" />
-    <Compile Include="Tools\FileExplorer\WriteFile.test.fs" />
     <Compile Include="Tools\FileManager\ReadFile.fs" />
     <Compile Include="Tools\FileManager\WriteFile.test.fs" />
     <Compile Include="Tools\OpenMeteo.test.fs" />
