@@ -24,9 +24,9 @@ type ListFiles () =
 
     [<Test>]
     member _.``ListFiles in root`` () =
-        let file_a = helper.CreateFile("a.txt")
-        let file_b = helper.CreateFile("b.txt")
-        
+        let file_a = helper.CreateFile(base.FileName_1)
+        let file_b = helper.CreateFile(base.FileName_2)
+
         let files = base.FileExplorerTools.ListFiles(base.TestDir) |> Set.ofSeq
 
         test <@ files = Set.ofSeq [file_a; file_b] @>
@@ -34,8 +34,8 @@ type ListFiles () =
     [<Test>]
     member _.``ListFiles in subdirectory`` () =
         let sub_dir = Path.Combine(base.TestDir, base.DirName)
-        let file_a = helper.CreateFile (Path.Combine(sub_dir, "a.txt"))
-        let file_b = helper.CreateFile (Path.Combine(sub_dir, "b.txt"))
+        let file_a = helper.CreateFile (Path.Combine(sub_dir, base.FileName_1))
+        let file_b = helper.CreateFile (Path.Combine(sub_dir, base.FileName_2))
 
         let files = base.FileExplorerTools.ListFiles(sub_dir) |> Set.ofSeq
 

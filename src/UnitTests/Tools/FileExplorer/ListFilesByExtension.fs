@@ -41,14 +41,13 @@ type ListFilesByExtension () =
     member _.``ListFilesByExtension in subdirectory`` () =
         let subDirPath = Path.Combine(base.TestDir, base.DirName)
 
-        // note, not in alphabetic order
-        let file_z = helper.CreateFile $"{base.DirName}/z.txt"
-        let file_c = helper.CreateFile $"{base.DirName}/c.csv"
-        let file_a = helper.CreateFile $"{base.DirName}/a.txt"
+        let file_1 = helper.CreateFile $"{base.DirName}/{base.FileName_1}"
+        let file_csv = helper.CreateFile $"{base.DirName}/c.csv"
+        let file_2 = helper.CreateFile $"{base.DirName}/{base.FileName_2}"
 
         let files = base.FileExplorerTools.ListFilesByExtension(subDirPath, ".txt")
 
-        test <@ sameSequence files [file_a; file_z] @>
+        test <@ sameSequence files [file_1; file_2] @>
 
     [<Test>]
     member _.``ListFilesByExtension handles file names with spaces`` () =
