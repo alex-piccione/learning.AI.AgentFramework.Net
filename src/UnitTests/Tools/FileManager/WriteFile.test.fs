@@ -49,7 +49,7 @@ type WriteTextFile () =
 
     [<Test>]
     member this.``WriteTextFile creates new file with spaces in name`` () =
-        let filePath = Path.Combine(base.TestDir, "my new file.txt")
+        let filePath = Path.Combine(base.TestDir, base.FileName_1)
         let content = "Content with spaces in filename."
 
         base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
@@ -60,7 +60,7 @@ type WriteTextFile () =
 
     [<Test>]
     member this.``WriteTextFile creates new file in directory with spaces`` () =
-        let filePath = Path.Combine(base.TestDir, "sub dir/nested/my file.txt")
+        let filePath = Path.Combine(base.TestDir, base.DirName, base.FileName_1)
         let content = "Nested content with spaces."
 
         base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
