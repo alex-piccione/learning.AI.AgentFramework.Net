@@ -32,7 +32,7 @@ type ListFiles () =
         test <@ files = Set.ofSeq [file_a; file_b] @>
 
     [<Test>]
-    member _.``ListFiles in subdirectory with special characters`` () =
+    member _.``ListFiles in subdirectory`` () =
         let dirName = "☑️ checked-Directory_1"  // Unicode + spaces + hyphens + underscores + different casing
         let sub_dir = Path.Combine(base.TestDir, dirName)
         let file_a = helper.CreateFile (Path.Combine(sub_dir, "a.txt"))

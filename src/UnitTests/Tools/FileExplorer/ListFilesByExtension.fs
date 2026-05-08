@@ -38,7 +38,7 @@ type ListFilesByExtension () =
         test <@ Set.ofSeq files = Set.ofList [file_a; file_c; file_z] @>
 
     [<Test>]
-    member _.``ListFilesByExtension in subdirectory with special characters`` () =
+    member _.``ListFilesByExtension in subdirectory`` () =
         let sub_dir = "☑️ checked-Directory_1"  // Unicode + spaces + hyphens + underscores + different casing
         let subDirPath = Path.Combine(base.TestDir, sub_dir)
 
