@@ -39,7 +39,7 @@ type ListFilesByExtension () =
 
     [<Test>]
     member _.``ListFilesByExtension in subdirectory with special characters`` () =
-        let sub_dir = "☑️ sub-dir_name DIR"  // Unicode + spaces + hyphens + underscores + different casing
+        let sub_dir = "☑️ checked-Directory_1"  // Unicode + spaces + hyphens + underscores + different casing
         let subDirPath = Path.Combine(base.TestDir, sub_dir)
 
         // note, not in alphabetic order
