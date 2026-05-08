@@ -2,3 +2,6 @@
 .vs/
 bin/
 obj/
+
+# Qwen settimhs backup file
+.qwen/settings.json.orig
