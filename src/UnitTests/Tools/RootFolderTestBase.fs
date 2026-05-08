@@ -75,6 +75,11 @@ type TestBase() =
     member _.FileExplorerTools = fileExplorerTools
     member _.FileManagerTools = fileManagerTools
 
+    // Special character test names
+    member _.DirName = "☑️ checked-Directory_1"
+    member _.FileName_1 = "☑️ checked-File_1.txt"
+    member _.FileName_2 = "☑️ checked-File_2.txt"
+
     [<SetUp>]
     member this.Setup() =
         let (dir, fileExplorerTools_, fileManagerTools_) = TestHelpers.createTestEnvironment ()

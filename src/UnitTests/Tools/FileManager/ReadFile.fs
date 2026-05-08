@@ -45,7 +45,7 @@ type ReadFile () =
     [<Test>]
     member _.``ReadFile handles file name with spaces`` () =
         let expectedContent = "Content with spaces in path."
-        let file = helper.CreateFile("my file.txt", expectedContent)
+        let file = helper.CreateFile(base.FileName_1, expectedContent)
 
         let content = base.FileManagerTools.ReadFile(file)
 

@@ -3,5 +3,6 @@
     "allow": [
       "Bash(ls *)"
     ]
-  }
+  },
+  "$version": 3
 }

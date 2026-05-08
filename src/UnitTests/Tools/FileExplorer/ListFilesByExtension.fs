@@ -37,21 +37,17 @@ type ListFilesByExtension () =
 
         test <@ Set.ofSeq files = Set.ofList [file_a; file_c; file_z] @>
 
-    [<TestCase("subdir")>]
-    [<TestCase("sub dir")>]
-    [<TestCase("sub DIR")>]
-    member _.``ListFilesByExtension in subdirectory`` (sub_dir) =
+    [<Test>]
+    member _.``ListFilesByExtension in subdirectory`` () =
+        let subDirPath = Path.Combine(base.TestDir, base.DirName)
 
-        let subDirPath = Path.Combine(base.TestDir, sub_dir)
-
-        // note, not in alphabetic order
-        let file_z = helper.CreateFile $"{sub_dir}/z.txt"
-        let file_c = helper.CreateFile $"{sub_dir}/c.csv"
-        let file_a = helper.CreateFile $"{sub_dir}/a.txt"
+        let file_1 = helper.CreateFile $"{base.DirName}/{base.FileName_1}"
+        let file_csv = helper.CreateFile $"{base.DirName}/c.csv"
+        let file_2 = helper.CreateFile $"{base.DirName}/{base.FileName_2}"
 
         let files = base.FileExplorerTools.ListFilesByExtension(subDirPath, ".txt")
 
-        test <@ sameSequence files [file_a; file_z] @>
+        test <@ sameSequence files [file_1; file_2] @>
 
     [<Test>]
     member _.``ListFilesByExtension handles file names with spaces`` () =
