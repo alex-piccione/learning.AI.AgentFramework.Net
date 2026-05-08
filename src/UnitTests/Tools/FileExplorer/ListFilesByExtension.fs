@@ -39,13 +39,12 @@ type ListFilesByExtension () =
 
     [<Test>]
     member _.``ListFilesByExtension in subdirectory`` () =
-        let sub_dir = "☑️ checked-Directory_1"  // Unicode + spaces + hyphens + underscores + different casing
-        let subDirPath = Path.Combine(base.TestDir, sub_dir)
+        let subDirPath = Path.Combine(base.TestDir, base.DirName)
 
         // note, not in alphabetic order
-        let file_z = helper.CreateFile $"{sub_dir}/z.txt"
-        let file_c = helper.CreateFile $"{sub_dir}/c.csv"
-        let file_a = helper.CreateFile $"{sub_dir}/a.txt"
+        let file_z = helper.CreateFile $"{base.DirName}/z.txt"
+        let file_c = helper.CreateFile $"{base.DirName}/c.csv"
+        let file_a = helper.CreateFile $"{base.DirName}/a.txt"
 
         let files = base.FileExplorerTools.ListFilesByExtension(subDirPath, ".txt")
 

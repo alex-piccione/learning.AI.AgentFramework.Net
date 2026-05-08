@@ -33,8 +33,7 @@ type ListFiles () =
 
     [<Test>]
     member _.``ListFiles in subdirectory`` () =
-        let dirName = "☑️ checked-Directory_1"  // Unicode + spaces + hyphens + underscores + different casing
-        let sub_dir = Path.Combine(base.TestDir, dirName)
+        let sub_dir = Path.Combine(base.TestDir, base.DirName)
         let file_a = helper.CreateFile (Path.Combine(sub_dir, "a.txt"))
         let file_b = helper.CreateFile (Path.Combine(sub_dir, "b.txt"))
 
