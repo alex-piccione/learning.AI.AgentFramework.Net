@@ -6,14 +6,14 @@
   <ItemGroup>
     <Compile Include="data\resource helper.fs" />
     <EmbeddedResource Include="data\openmeteo forecast.response.json" />
-    <Compile Include="tools\RootFolderTestBase.fs" />
-    <Compile Include="tools\DirectoryExplorer\Utils.fs" />
-    <Compile Include="tools\DirectoryExplorer\ReadFile.fs" />
-    <Compile Include="tools\DirectoryExplorer\ListFiles.fs" />
-    <Compile Include="tools\DirectoryExplorer\GetTree.fs" />
-    <Compile Include="tools\DirectoryExplorer\GetTree_back.fs" />
-    <Compile Include="tools\FileManager\WriteFile.test.fs" />
-    <Compile Include="tools\OpenMeteo.test.fs" />
+    <Compile Include="Tools\Utils.fs" />
+    <Compile Include="Tools\RootFolderTestBase.fs" />
+    <Compile Include="Tools\FileExplorer\ListFiles.fs" />
+    <Compile Include="Tools\FileExplorer\ListFilesByExtension.fs" />
+    <Compile Include="Tools\FileExplorer\GetDirectoriesTree.fs" />
+    <Compile Include="Tools\FileManager\ReadFile.fs" />
+    <Compile Include="Tools\FileManager\WriteFile.test.fs" />
+    <Compile Include="Tools\OpenMeteo.test.fs" />
   </ItemGroup>
 
   <ItemGroup>

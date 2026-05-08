@@ -5,6 +5,7 @@
     <File Path="../doc/Models.md" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path="../.github/workflows/pr_on_main.yaml" />
     <File Path="../README.md" />
     <File Path="../TODO.md" />
     <File Path=".gitignore" />

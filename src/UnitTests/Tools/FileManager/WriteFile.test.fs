@@ -27,40 +27,59 @@ type WriteTextFile () =
 
     [<Test>]
     member this.``WriteTextFile creates new file in root`` () =
-        let filePath = "new_file.txt"
+        let filePath = Path.Combine(base.TestDir, "new_file.txt")
         let content = "This is new content."
 
         base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
 
-        let fullPath = Path.Combine(base.TestDir, filePath)
-        test <@ File.Exists fullPath @>
-        let actualContent = File.ReadAllText fullPath
+        test <@ File.Exists filePath @>
+        let actualContent = File.ReadAllText filePath
         test <@ actualContent = content @>
 
     [<Test>]
     member _.``WriteTextFile creates new file in nested directory`` () =
-        let filePath = "subdir/nested/new_file.txt"
+        let filePath = Path.Combine(base.TestDir, "subdir/nested/new_file.txt")
         let content = "Nested content."
 
         base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
 
-        let fullPath = Path.Combine(base.TestDir, filePath)
-        test <@ File.Exists fullPath @>
-        let actualContent = File.ReadAllText fullPath
+        test <@ File.Exists filePath @>
+        let actualContent = File.ReadAllText filePath
+        test <@ actualContent = content @>
+
+    [<Test>]
+    member this.``WriteTextFile creates new file with spaces in name`` () =
+        let filePath = Path.Combine(base.TestDir, "my new file.txt")
+        let content = "Content with spaces in filename."
+
+        base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
+
+        test <@ File.Exists filePath @>
+        let actualContent = File.ReadAllText filePath
+        test <@ actualContent = content @>
+
+    [<Test>]
+    member this.``WriteTextFile creates new file in directory with spaces`` () =
+        let filePath = Path.Combine(base.TestDir, "sub dir/nested/my file.txt")
+        let content = "Nested content with spaces."
+
+        base.FileManagerTools.WriteTextFile(filePath, content) |> runTask
+
+        test <@ File.Exists filePath @>
+        let actualContent = File.ReadAllText filePath
         test <@ actualContent = content @>
 
     [<Test>]
     member _.``WriteTextFile overwrites existing file`` () =
-        let filePath = "existing.txt"
+        let filePath = Path.Combine(base.TestDir, "existing.txt")
         let initialContent = "Initial content."
         let newContent = "Overwritten content."
 
         // Create initial file
-        let fullPath = Path.Combine(base.TestDir, filePath)
-        File.WriteAllText(fullPath, initialContent)
+        File.WriteAllText(filePath, initialContent)
 
         // Overwrite with CreateFile
         base.FileManagerTools.WriteTextFile(filePath, newContent) |> runTask
 
-        let actualContent = File.ReadAllText fullPath
+        let actualContent = File.ReadAllText filePath
         test <@ actualContent = newContent @>

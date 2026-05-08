@@ -14,11 +14,10 @@ type AIService =
 
 let service = AIService.LocalOllama
 
-let ollamaContextSize = 8192
-
 let OllamaModel
+    = "qwen2.5-coder:7b-24k"
     //= "gemma4:e2b"               // ✅ Good
-    //= "gemma4:e4b"                  
+    //= "gemma4:e4b"
     //= "bjoernb/gemma4-e4b-fast"  // ❌TOO BIG but fast
     //= "qwen3:8b"                 // slow and meh
     //= "qwen3.5:4b"               // ✅ Very Good
@@ -31,8 +30,8 @@ let OllamaModel
     //= "llama3-groq-tool-use:latest"
     //= "llama3-gradient:8b"       // ❌ Does not support tools
     //= "granite4.1:8b"
-    = "granite4.1:8b-16K" 
-    //= "granite4.1:8b-q5_K_M"    
+    //= "granite4.1:8b-16K"
+    //= "granite4.1:8b-q5_K_M"
     // granite4.1:8b-q6_K
     //= "granite4:3b"              // ✅ ok, stupid sometimes?
     //= "granite4:3b-h"
@@ -51,7 +50,6 @@ let OllamaModel
     //= "deepseek-r1:8b"           // ❌ Does not support tools
     //= "deepseek-r1:7b"           // ❌ Does not support tools
     //= "granite3.3:8b"            // ❌ Does not understand it can use tool
-
 
 (*
 

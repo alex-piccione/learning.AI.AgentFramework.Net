@@ -1,11 +1,19 @@
-# Microsoft Agents Framework
+# Project Context
 
-Playground for Microsoft Agent Framework.
+## Build
+- `cd src && dotnet build *.slnx` - Build the solution
+- **Preferred**: `dotnet build src/` - Simpler build form (user preference)
 
-Official docs:
-GitHub: https://github.com/microsoft/agent-framework
+## Project Structure
+- F# project using NUnit + Unquote for testing
+- Solution file (.slnx) is in the `src/` folder
+- ConsoleApp/ (entry point, helpers, settings, secrets)
+- Library/ (agents, tools, utilities)
+- UnitTests/ (test assemblies)
 
-This project uses OpenAI compatible API hosts.
+## Key Info
+- Microsoft Agents Framework with OpenAI-compatible API
+- Local Ollama support for running models locally
 
 ## TODO.md
 
